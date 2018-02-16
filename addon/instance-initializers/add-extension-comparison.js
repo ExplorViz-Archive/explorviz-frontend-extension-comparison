@@ -20,6 +20,12 @@ export function initialize(appInstance) {
   });
 
   LandscapeReload.reopen({
+
+    init() {
+      this._super(...arguments);
+      this.set('shallReload', false);
+    },
+
     updateObject(){
       const self = this;
       //if extension: take not latest-landscape, but extension/comparison/landscape/merged
