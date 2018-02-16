@@ -1,4 +1,6 @@
-{{visualization/page-setup/visualization-navbar}}
-{{visualization/rendering/application-rendering}}
-{{comparison-test}}
-{{outlet}}
+{{#if showLandscape}}
+  {{visualization/rendering/landscape-rendering}}
+{{else}}
+  {{visualization/page-setup/visualization-navbar}}
+  {{visualization/rendering/application-rendering}}
+{{/if}}
