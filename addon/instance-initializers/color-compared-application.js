@@ -4,6 +4,11 @@ export function initialize(/* appInstance */) {
 
   //overwrite core functionality such that the coloring fits the status of the element.
   ApplicationRendering.reopen({
+    initRendering(){
+      this._super(...arguments);
+      this.debug('this in initRendering() in extension: ', this);
+      this.initInteraction();
+    },
 
     //coloring of components and classes
     addComponentToScene(component, color){
@@ -49,6 +54,7 @@ export function initialize(/* appInstance */) {
       const addedCommunicationColor = 0xffff00;
       const editedCommunicationColor = 0xff3399;
 
+      this.preProcessEntity();
       const emberApplication = this.get('landscapeRepo.latestApplication');
       const viewCenterPoint = this.get('centerAndZoomCalculator.centerPoint');
       const accuCommunications =
