@@ -1,0 +1,1 @@
+export { default } from 'explorviz-frontend-extension-comparison/components/color-checkbox-field';
