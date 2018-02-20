@@ -11,13 +11,27 @@ export function initialize(/* appInstance */) {
     },
 
     //coloring of components and classes
-    addComponentToScene(component, color){
+    addComponentToScene(component){
       this._super(...arguments);
       const added = 'ADDED';
       const edited = 'EDITED';
-      const addedClazzColor = 0x9b77ee;
-      const addedComponentColor = 0x1aff1a;
-      const editedComponentColor = 0xffa366;
+      const original = 'ORIGINAL';
+//dark grey
+      //const originalClazzColor = 0x999999;
+      //dark purple
+      const originalClazzColor = 0x2c0e71;
+//light grey
+    //  const originalComponentColor = 0xcccccc;
+    //dark darkGreen
+    const originalComponentColor = 0x00802d;
+
+      //const addedClazzColor = 0x3E14A0;
+      const addedClazzColor = 0x0066ff;
+      //const addedComponentColor = 0x1aff1a;
+      const addedComponentColor = 0x80b3ff;
+
+      //const editedComponentColor = 0xffa366;
+      const editedComponentColor = 0xff8533;
 
 
 
@@ -25,9 +39,11 @@ export function initialize(/* appInstance */) {
         this.createBox(component, addedComponentColor, false);
         component.set('color', addedComponentColor);
       }else if(component.get('extensionAttributes.status') ===edited){
-        color = 0xffa366;
         this.createBox(component, editedComponentColor, false);
         component.set('color', editedComponentColor);
+      }else if(component.get('extensionAttributes.status') === original){
+        this.createBox(component, originalComponentColor, false);
+        component.set('color', originalComponentColor);
       }
       const clazzes = component.get('clazzes');
       clazzes.forEach((clazz) => {
@@ -39,6 +55,8 @@ export function initialize(/* appInstance */) {
           }else if(clazz.get('extensionAttributes.status') === edited){
             //this.createBox(clazz, 0xffa366, true);
             //TODO define what EDITED mean for a class
+          } else if(clazz.get('extensionAttributes.status') === original){
+            this.createBox(clazz, originalClazzColor, true);
           }
         }
       });
@@ -51,8 +69,12 @@ export function initialize(/* appInstance */) {
       const added = 'ADDED';
       const edited = 'EDITED';
       const original = 'ORIGINAL';
-      const addedCommunicationColor = 0xffff00;
-      const editedCommunicationColor = 0xff3399;
+//dark grey
+      //const originalCommunicationColor = 0x999999;
+      //dark orange
+      const originalCommunicationColor = 0xb36b00;
+      const addedCommunicationColor = 0x0066ff;
+      const editedCommunicationColor = 0xe60000;
 
       this.preProcessEntity();
       const emberApplication = this.get('landscapeRepo.latestApplication');
@@ -99,7 +121,7 @@ export function initialize(/* appInstance */) {
             }else if(aggregatedCommu.get('extensionAttributes.status') === edited){
               material.color = new THREE.Color(editedCommunicationColor);
             }else if(aggregatedCommu.get('extensionAttributes.status') === original){
-              material.color = new THREE.Color(0xf49100);
+              material.color = new THREE.Color(originalCommunicationColor);
             }
 
             const thickness =commu.pipeSize * 0.3;
