@@ -1,14 +1,8 @@
 import ApplicationRendering from 'explorviz-frontend/components/visualization/rendering/application-rendering';
+import layout from '../templates/components/merged-application-rendering';
 
-export function initialize(/* appInstance */) {
-
-  //overwrite core functionality such that the coloring fits the status of the element.
-  ApplicationRendering.reopen({
-    initRendering(){
-      this._super(...arguments);
-      this.debug('this in initRendering() in extension: ', this);
-      this.initInteraction();
-    },
+export default ApplicationRendering.extend({
+layout,
 
     //coloring of components and classes
     addComponentToScene(component){
@@ -135,9 +129,4 @@ export function initialize(/* appInstance */) {
         }
       });//End commu.forEach
     } //End populateScene()
-  });//End ApplicationRendering
-}
-
-export default {
-  initialize
-};
+});
