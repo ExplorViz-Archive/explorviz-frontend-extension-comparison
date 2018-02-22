@@ -1,9 +1,17 @@
 import ApplicationRendering from 'explorviz-frontend/components/visualization/rendering/application-rendering';
 import layout from '../templates/components/merged-application-rendering';
+import Ember from 'ember';
+
+const {inject} = Ember;
 
 export default ApplicationRendering.extend({
 layout,
+reloadHandler: inject.service("reload-handler"),
 
+// initRendering() {
+// this._super(...arguments);
+// this.get('reloadHandler').stopExchange();
+// },
     //coloring of components and classes
     addComponentToScene(component){
       this._super(...arguments);
@@ -69,6 +77,9 @@ layout,
       const originalCommunicationColor = 0xb36b00;
       const addedCommunicationColor = 0x0066ff;
       const editedCommunicationColor = 0xe60000;
+
+      //stop reloading landscape every 10th second, without this error occurs in the frontend, but it is visualized correctly
+      this.get('reloadHandler').stopExchange();
 
       this.preProcessEntity();
       const emberApplication = this.get('landscapeRepo.latestApplication');
