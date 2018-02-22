@@ -7,6 +7,7 @@ const {inject} = Ember;
 export default ApplicationRendering.extend({
 layout,
 reloadHandler: inject.service("reload-handler"),
+renderingService: inject.service("rendering-service"),
 
 // initRendering() {
 // this._super(...arguments);
@@ -80,6 +81,9 @@ reloadHandler: inject.service("reload-handler"),
 
       //stop reloading landscape every 10th second, without this error occurs in the frontend, but it is visualized correctly
       this.get('reloadHandler').stopExchange();
+      //exclude timeline
+      this.get('renderingService').set('showTimeline', false);
+
 
       this.preProcessEntity();
       const emberApplication = this.get('landscapeRepo.latestApplication');
