@@ -8,6 +8,7 @@ export default ApplicationRendering.extend({
 layout,
 reloadHandler: inject.service("reload-handler"),
 renderingService: inject.service("rendering-service"),
+configurationService: Ember.inject.service("color-configuration"),
 
 // initRendering() {
 // this._super(...arguments);
@@ -19,34 +20,34 @@ renderingService: inject.service("rendering-service"),
       const added = 'ADDED';
       const edited = 'EDITED';
       const original = 'ORIGINAL';
-//dark grey
-      //const originalClazzColor = 0x999999;
-      //dark purple
-      const originalClazzColor = 0x2c0e71;
-//light grey
-    //  const originalComponentColor = 0xcccccc;
-    //dark darkGreen
-    const originalComponentColor = 0x00802d;
 
-      //const addedClazzColor = 0x3E14A0;
-      const addedClazzColor = 0x0066ff;
-      //const addedComponentColor = 0x1aff1a;
-      const addedComponentColor = 0x80b3ff;
+      // const clazzColorInactive = this.get('configurationService').get('inactiveApplicationColors.clazz');
+      // const oddComponentColorInactive = this.get('configurationService').get('inactiveApplicationColors.oddComponent');
+      // const evenComponentColorInactive = this.get('configurationService').get('inactiveApplicationColors.evenComponent');
 
-      //const editedComponentColor = 0xffa366;
-      const editedComponentColor = 0xff8533;
+      const addedClazzColorActive = this.get('configurationService').get('addedApplicationColors.clazz');
+      const addedOddComponentColorActive = this.get('configurationService').get('addedApplicationColors.componentOdd');
+      const addedEvenComponentColorActive = this.get('configurationService').get('addedApplicationColors.componentEven');
 
+      const editedOddComponentColorActive = this.get('configurationService').get('editedApplicationColors.componentOdd');
+      const editedEvenComponentColorActive = this.get('configurationService').get('editedApplicationColors.componentEven');
 
+      const originalClazzColorActive = this.get('configurationService').get('originalApplicationColors.clazz');
+      const originalOddComponentColorActive = this.get('configurationService').get('originalApplicationColors.componentOdd');
+      const originalEvenComponentColorActive = this.get('configurationService').get('originalApplicationColors.componentEven');
 
       if(component.get('extensionAttributes.status') === added){
-        this.createBox(component, addedComponentColor, false);
-        component.set('color', addedComponentColor);
+        this.debug('addedOddComponentColorActive: ', addedOddComponentColorActive);
+        this.createBox(component, addedOddComponentColorActive, false);
+        component.set('color', addedOddComponentColorActive);
       }else if(component.get('extensionAttributes.status') ===edited){
-        this.createBox(component, editedComponentColor, false);
-        component.set('color', editedComponentColor);
+        this.debug('editedOddComponentColorActive', editedOddComponentColorActive);
+        this.createBox(component, editedOddComponentColorActive, false);
+        component.set('color', editedOddComponentColorActive);
       }else if(component.get('extensionAttributes.status') === original){
-        this.createBox(component, originalComponentColor, false);
-        component.set('color', originalComponentColor);
+        this.debug('originalOddComponentColorActive', originalOddComponentColorActive);
+        this.createBox(component, originalOddComponentColorActive, false);
+        component.set('color', originalOddComponentColorActive);
       }
       const clazzes = component.get('clazzes');
       clazzes.forEach((clazz) => {
@@ -54,12 +55,11 @@ renderingService: inject.service("rendering-service"),
           if (clazz.get('highlighted')) {
             this.createBox(clazz, 0xFF0000, true);
           } else if (clazz.get('extensionAttributes.status') === added){
-            this.createBox(clazz, addedClazzColor, true);
-          }else if(clazz.get('extensionAttributes.status') === edited){
-            //this.createBox(clazz, 0xffa366, true);
-            //TODO define what EDITED mean for a class
-          } else if(clazz.get('extensionAttributes.status') === original){
-            this.createBox(clazz, originalClazzColor, true);
+            this.debug('addedClazzColorActive: ', addedClazzColorActive);
+            this.createBox(clazz, addedClazzColorActive, true);
+          }else if (clazz.get('extensionAttributes.status') === original){
+            this.debug('originalClazzColorActive: ', originalClazzColorActive);
+            this.createBox(clazz, originalClazzColorActive, true);
           }
         }
       });
@@ -72,12 +72,11 @@ renderingService: inject.service("rendering-service"),
       const added = 'ADDED';
       const edited = 'EDITED';
       const original = 'ORIGINAL';
-//dark grey
-      //const originalCommunicationColor = 0x999999;
-      //dark orange
-      const originalCommunicationColor = 0xb36b00;
-      const addedCommunicationColor = 0x0066ff;
-      const editedCommunicationColor = 0xe60000;
+
+      const originalCommunicationColorActive = this.get('configurationService').get('originalApplicationColors.communication');
+      const addedCommunicationColorActive = this.get('configurationService').get('addedApplicationColors.communication');
+      const editedCommunicationColorActive = this.get('configurationService').get('editedApplicationColors.communication');
+      // const communicationColorInactive = this.get('configurationService').get('inactiveApplicationColors.communication');
 
       //stop reloading landscape every 10th second, without this error occurs in the frontend, but it is visualized correctly
       this.get('reloadHandler').stopExchange();
@@ -126,11 +125,11 @@ renderingService: inject.service("rendering-service"),
             });
 
             if(aggregatedCommu.get('extensionAttributes.status') === added){
-              material.color = new THREE.Color(addedCommunicationColor);
+              material.color = new THREE.Color(addedCommunicationColorActive);
             }else if(aggregatedCommu.get('extensionAttributes.status') === edited){
-              material.color = new THREE.Color(editedCommunicationColor);
+              material.color = new THREE.Color(editedCommunicationColorActive);
             }else if(aggregatedCommu.get('extensionAttributes.status') === original){
-              material.color = new THREE.Color(originalCommunicationColor);
+              material.color = new THREE.Color(originalCommunicationColorActive);
             }
 
             const thickness =commu.pipeSize * 0.3;
