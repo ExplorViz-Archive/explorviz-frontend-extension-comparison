@@ -24,7 +24,7 @@ export default ConfigService.extend({
   */
   addedApplicationColors: {
     foundation: "rgb(199,199,199)",
-    componentOdd: "#a4c7f9",
+    componentOdd: "rgb(164, 199, 249)",
     componentEven: "rgb(128, 179, 255)",
     clazz: "rgb(0, 102, 255)",
     communication: "rgb(0, 102, 255)",
