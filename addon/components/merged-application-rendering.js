@@ -37,15 +37,12 @@ configurationService: Ember.inject.service("color-configuration"),
       const originalEvenComponentColorActive = this.get('configurationService').get('originalApplicationColors.componentEven');
 
       if(component.get('extensionAttributes.status') === added){
-        this.debug('addedOddComponentColorActive: ', addedOddComponentColorActive);
         this.createBox(component, addedOddComponentColorActive, false);
         component.set('color', addedOddComponentColorActive);
       }else if(component.get('extensionAttributes.status') ===edited){
-        this.debug('editedOddComponentColorActive', editedOddComponentColorActive);
         this.createBox(component, editedOddComponentColorActive, false);
         component.set('color', editedOddComponentColorActive);
       }else if(component.get('extensionAttributes.status') === original){
-        this.debug('originalOddComponentColorActive', originalOddComponentColorActive);
         this.createBox(component, originalOddComponentColorActive, false);
         component.set('color', originalOddComponentColorActive);
       }
@@ -55,10 +52,8 @@ configurationService: Ember.inject.service("color-configuration"),
           if (clazz.get('highlighted')) {
             this.createBox(clazz, 0xFF0000, true);
           } else if (clazz.get('extensionAttributes.status') === added){
-            this.debug('addedClazzColorActive: ', addedClazzColorActive);
             this.createBox(clazz, addedClazzColorActive, true);
           }else if (clazz.get('extensionAttributes.status') === original){
-            this.debug('originalClazzColorActive: ', originalClazzColorActive);
             this.createBox(clazz, originalClazzColorActive, true);
           }
         }
