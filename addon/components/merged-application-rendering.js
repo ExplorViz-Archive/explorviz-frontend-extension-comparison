@@ -2,6 +2,7 @@ import ApplicationRendering from 'explorviz-frontend/components/visualization/re
 import layout from '../templates/components/merged-application-rendering';
 import Ember from 'ember';
 
+
 const {inject} = Ember;
 
 export default ApplicationRendering.extend({
@@ -9,11 +10,8 @@ layout,
 reloadHandler: inject.service("reload-handler"),
 renderingService: inject.service("rendering-service"),
 configurationService: Ember.inject.service("color-configuration"),
+coreConfiguration: Ember.inject.service("configuration"),
 
-// initRendering() {
-// this._super(...arguments);
-// this.get('reloadHandler').stopExchange();
-// },
     //coloring of components and classes
     addComponentToScene(component){
       this._super(...arguments);
@@ -21,40 +19,52 @@ configurationService: Ember.inject.service("color-configuration"),
       const edited = 'EDITED';
       const original = 'ORIGINAL';
 
-      // const clazzColorInactive = this.get('configurationService').get('inactiveApplicationColors.clazz');
-      // const oddComponentColorInactive = this.get('configurationService').get('inactiveApplicationColors.oddComponent');
+      const toggleOriginal = this.get('coreConfiguration.comparisonSettings.toggleOriginal');
+      const toggleAdded = this.get('coreConfiguration.comparisonSettings.toggleAdded');
+      const toggleEdited = this.get('coreConfiguration.comparisonSettings.toggleEdited');
+      const toggleDeleted = this.get('coreConfiguration.comparisonSettings.toggleDeleted');
+
+      const clazzColorInactive = this.get('configurationService').get('inactiveApplicationColors.clazz');
+      const oddComponentColorInactive = this.get('configurationService').get('inactiveApplicationColors.componentOdd');
       // const evenComponentColorInactive = this.get('configurationService').get('inactiveApplicationColors.evenComponent');
 
       const addedClazzColorActive = this.get('configurationService').get('addedApplicationColors.clazz');
       const addedOddComponentColorActive = this.get('configurationService').get('addedApplicationColors.componentOdd');
-      const addedEvenComponentColorActive = this.get('configurationService').get('addedApplicationColors.componentEven');
+      //const addedEvenComponentColorActive = this.get('configurationService').get('addedApplicationColors.componentEven');
 
       const editedOddComponentColorActive = this.get('configurationService').get('editedApplicationColors.componentOdd');
-      const editedEvenComponentColorActive = this.get('configurationService').get('editedApplicationColors.componentEven');
+    //  const editedEvenComponentColorActive = this.get('configurationService').get('editedApplicationColors.componentEven');
 
       const originalClazzColorActive = this.get('configurationService').get('originalApplicationColors.clazz');
       const originalOddComponentColorActive = this.get('configurationService').get('originalApplicationColors.componentOdd');
-      const originalEvenComponentColorActive = this.get('configurationService').get('originalApplicationColors.componentEven');
+    //  const originalEvenComponentColorActive = this.get('configurationService').get('originalApplicationColors.componentEven');
 
-      if(component.get('extensionAttributes.status') === added){
+if(toggleAdded && component.get('extensionAttributes.status') === added){
         this.createBox(component, addedOddComponentColorActive, false);
         component.set('color', addedOddComponentColorActive);
-      }else if(component.get('extensionAttributes.status') ===edited){
+      }else if(toggleEdited && component.get('extensionAttributes.status') ===edited){
         this.createBox(component, editedOddComponentColorActive, false);
         component.set('color', editedOddComponentColorActive);
-      }else if(component.get('extensionAttributes.status') === original){
+      }else if(toggleOriginal && component.get('extensionAttributes.status') === original){
         this.createBox(component, originalOddComponentColorActive, false);
         component.set('color', originalOddComponentColorActive);
+      }else{
+        this.createBox(component, oddComponentColorInactive, false);
+        component.set('color', oddComponentColorInactive);
       }
+
       const clazzes = component.get('clazzes');
       clazzes.forEach((clazz) => {
-        if (component.get('opened')) {
+
+                if (component.get('opened')) {
           if (clazz.get('highlighted')) {
             this.createBox(clazz, 0xFF0000, true);
-          } else if (clazz.get('extensionAttributes.status') === added){
+          }else if (toggleAdded && clazz.get('extensionAttributes.status') === added){
             this.createBox(clazz, addedClazzColorActive, true);
-          }else if (clazz.get('extensionAttributes.status') === original){
+          }else if (toggleOriginal && clazz.get('extensionAttributes.status') === original){
             this.createBox(clazz, originalClazzColorActive, true);
+          }else{
+            this.createBox(clazz, clazzColorInactive, true);
           }
         }
       });
@@ -68,13 +78,19 @@ configurationService: Ember.inject.service("color-configuration"),
       const edited = 'EDITED';
       const original = 'ORIGINAL';
 
+      const toggleOriginal = this.get('coreConfiguration.comparisonSettings.toggleOriginal');
+      const toggleAdded = this.get('coreConfiguration.comparisonSettings.toggleAdded');
+      const toggleEdited = this.get('coreConfiguration.comparisonSettings.toggleEdited');
+      const toggleDeleted = this.get('coreConfiguration.comparisonSettings.toggleDeleted');
+
       const originalCommunicationColorActive = this.get('configurationService').get('originalApplicationColors.communication');
       const addedCommunicationColorActive = this.get('configurationService').get('addedApplicationColors.communication');
       const editedCommunicationColorActive = this.get('configurationService').get('editedApplicationColors.communication');
-      // const communicationColorInactive = this.get('configurationService').get('inactiveApplicationColors.communication');
+      const coreCommunicationColor = this.get('coreConfiguration').get('landscapeColors.communication');
+      const communicationColorInactive = this.get('configurationService').get('inactiveApplicationColors.communication');
 
       //stop reloading landscape every 10th second, without this error occurs in the frontend, but it is visualized correctly
-      this.get('reloadHandler').stopExchange();
+    //  this.get('reloadHandler').stopExchange();
       //exclude timeline
       this.get('renderingService').set('showTimeline', false);
 
@@ -119,12 +135,16 @@ configurationService: Ember.inject.service("color-configuration"),
               transparent: transparent
             });
 
-            if(aggregatedCommu.get('extensionAttributes.status') === added){
+           if(toggleAdded && aggregatedCommu.get('extensionAttributes.status') === added){
               material.color = new THREE.Color(addedCommunicationColorActive);
-            }else if(aggregatedCommu.get('extensionAttributes.status') === edited){
+
+            }else if(toggleEdited && aggregatedCommu.get('extensionAttributes.status') === edited){
               material.color = new THREE.Color(editedCommunicationColorActive);
-            }else if(aggregatedCommu.get('extensionAttributes.status') === original){
+
+            }else if(toggleOriginal && aggregatedCommu.get('extensionAttributes.status') === original){
               material.color = new THREE.Color(originalCommunicationColorActive);
+            } else {
+              material.color = new THREE.Color(communicationColorInactive);
             }
 
             const thickness =commu.pipeSize * 0.3;
@@ -138,4 +158,5 @@ configurationService: Ember.inject.service("color-configuration"),
         }
       });//End commu.forEach
     } //End populateScene()
+
 });

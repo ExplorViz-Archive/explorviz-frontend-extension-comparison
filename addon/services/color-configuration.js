@@ -9,9 +9,9 @@ export default ConfigService.extend({
   */
   inactiveApplicationColors: {
     foundation: "rgb(199,199,199)",
-    componentOdd: "",
+    componentOdd: "rgb(127, 129, 132)",
     componentEven: "",
-    clazz: "",
+    clazz: "rgb(54, 55, 56)",
     communication: "rgb(153, 153, 153)",
     highlightedEntity: "rgb(255,0,0)",
   },

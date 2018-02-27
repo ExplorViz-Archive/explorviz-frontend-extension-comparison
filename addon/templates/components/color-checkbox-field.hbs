@@ -13,16 +13,16 @@
         <label>Highlight Elements: </label>
         <div class="checkbox">
           <!-- <label><input type="checkbox"> Original Elements</label>  onToggle=(action(mut toggleOriginal))-->
-          {{x-toggle theme='flip' size='large' value=toggleOriginal onLabel='Original' offLabel='Original' onToggle=(mut toggleOriginal)}}
+          {{x-toggle theme='flip' size='large' onLabel='Original' offLabel='Original' value=toggleOriginal onToggle=(action (mut toggleOriginal))}}
         </div>
         <div class="checkbox">
-        {{x-toggle theme='flip' size='large' value=toggleAdded onLabel='Added' offLabel='Added' onToggle=(mut toggleAdded)}}
+        {{x-toggle theme='flip' size='large' onLabel='Added' offLabel='Added' value=toggleAdded onToggle=(action (mut toggleAdded))}}
         </div>
         <div class="checkbox">
-          {{x-toggle theme='flip' size='large' value=toggleEdited onLabel='Edited' offLabel='Edited' onToggle=(mut toggleEdited)}}
+          {{x-toggle theme='flip' size='large' onLabel='Edited' offLabel='Edited' value=toggleEdited onToggle=(action (mut toggleEdited))}}
         </div>
         <div class="checkbox">
-          {{x-toggle theme='flip' size='large' value=toggleDeleted onLabel='Deleted' offLabel='Deleted' onToggle=(mut toggleDeleted)}}
+          {{x-toggle theme='flip' size='large' onLabel='Deleted' offLabel='Deleted' value=toggleDeleted onToggle=(action (mut toggleDeleted))}}
         </div>
       </form>
 
