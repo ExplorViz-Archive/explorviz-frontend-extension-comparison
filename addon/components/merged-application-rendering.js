@@ -1,6 +1,7 @@
 import ApplicationRendering from 'explorviz-frontend/components/visualization/rendering/application-rendering';
 import layout from '../templates/components/merged-application-rendering';
 import Ember from 'ember';
+import THREE from "npm:three";
 
 
 const {inject} = Ember;
@@ -9,8 +10,9 @@ export default ApplicationRendering.extend({
   layout,
   reloadHandler: inject.service("reload-handler"),
   renderingService: inject.service("rendering-service"),
-  configurationService: Ember.inject.service("color-configuration"),
-  coreConfiguration: Ember.inject.service("configuration"),
+  configurationService: inject.service("color-configuration"),
+  coreConfiguration: inject.service("configuration"),
+  mergedRepo : inject.service("merged-repository"),
 
   //coloring of components and classes
   addComponentToScene(component){
@@ -139,37 +141,37 @@ export default ApplicationRendering.extend({
 
 
     this.preProcessEntity();
-    const emberApplication = this.get('landscapeRepo.latestApplication');
+    const emberApplication = this.get('mergedRepo.mergedApplication');
+    this.debug('emberApplication: ', emberApplication);
     const viewCenterPoint = this.get('centerAndZoomCalculator.centerPoint');
-    const accuCommunications =
-    emberApplication.get('communicationsAccumulated');
 
-    accuCommunications.forEach((commu) => {
+    const cumulatedClazzCommunications = emberApplication.get('cumulatedClazzCommunications');
 
-      if (commu.source.content !==commu.target.content) {
-        if (commu.startPoint &&commu.endPoint) {
 
-          const start = new THREE.Vector3();
-          start.subVectors(commu.startPoint, viewCenterPoint);
-          start.multiplyScalar(0.5);
+    cumulatedClazzCommunications.forEach((cumuClazzCommu) => {
 
-          const end = new THREE.Vector3();
-          end.subVectors(commu.endPoint, viewCenterPoint);
-          end.multiplyScalar(0.5);
+      if (cumuClazzCommu.get('startPoint') && cumuClazzCommu.get('endPoint')) {
+        const start = new THREE.Vector3();
+        start.subVectors(cumuClazzCommu.get('startPoint'), viewCenterPoint);
+        start.multiplyScalar(0.5);
 
-          if(start.y >= end.y) {
-            end.y = start.y;
-          } else {
-            start.y = end.y;
-          }
+        const end = new THREE.Vector3();
+        end.subVectors(cumuClazzCommu.get('endPoint'), viewCenterPoint);
+        end.multiplyScalar(0.5);
 
-          let transparent = false;
-          let opacityValue = 1.0;
+        if(start.y >= end.y) {
+          end.y = start.y;
+        } else {
+          start.y = end.y;
+        }
 
-          if(commu.state === "TRANSPARENT") {
-            transparent = true;
-            opacityValue = 0.4;
-          }
+        let transparent = false;
+        let opacityValue = 1.0;
+
+        if(cumuClazzCommu.get('state') === "TRANSPARENT") {
+          transparent = true;
+          opacityValue = 0.4;
+        }
 
           const material = new THREE.MeshBasicMaterial({
             color : new THREE.Color(communicationColorInactive),
@@ -178,7 +180,7 @@ export default ApplicationRendering.extend({
           });
 
           //TODO what about scenario: aggregatedCommunications contains 5 communications. 3 of them are ORIGINAL and 2 of them are ADDED How to color?
-          const aggregatedCommu = commu.aggregatedCommunications.get(0);
+          const aggregatedCommu = cumuClazzCommu.aggregatedCommunications.get(0);
           if(!(toggleAdded || toggleEdited || toggleOriginal || toggleDeleted)){
             material.color = new THREE.Color(communicationColorInactive);
           }else  if(toggleAdded && aggregatedCommu.get('extensionAttributes.status') === added){
@@ -196,15 +198,14 @@ export default ApplicationRendering.extend({
 
 
 
-          const thickness =commu.pipeSize * 0.3;
+          const thickness = cumuClazzCommu.get('lineThickness') * 0.3;
+
           const pipe = this.cylinderMesh(start, end, material, thickness);
 
-          pipe.userData.model =commu;
-
+          pipe.userData.model = cumuClazzCommu;
           self.get('application3D').add(pipe);
 
         }
-      }
     });//End commu.forEach
   } //End populateScene()
 
