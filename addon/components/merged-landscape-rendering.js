@@ -15,5 +15,6 @@ export default LandscapeRendering.extend({
     this.get('reloadHandler').stopExchange();
     //exclude timeline
     this.get('renderingService').set('showTimeline', false);
+    this.get('renderingService').set('showVersionbar', true);
   }
 });
