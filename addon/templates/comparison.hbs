@@ -1,6 +1,18 @@
-{{#if showLandscape}}
-  {{merged-landscape-rendering}}
+{{#if showMergedLandscape}}
+  {{#if mergedRepo.mergedLandscape.systems}}
+    {{merged-landscape-rendering}}
+  {{else}}
+    <div class="container-fluid">
+      <div class="jumbotron">
+        <h2>No merged landscape found!</h2>
+        <p>Select two landscapes for merging.</p>
+      </div>
+      <div id="spinnerDiv" class="container" style="position:relative; height:20%;">
+        {{ember-spinner}}
+      </div>
+    </div>
+  {{/if}}
 {{else}}
-  {{color-checkbox-field}}
-  {{merged-application-rendering}}
+{{color-checkbox-field}}
+{{merged-application-rendering}}
 {{/if}}
