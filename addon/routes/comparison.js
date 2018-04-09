@@ -19,7 +19,7 @@ actions: {
 
   didTransition() {
     this.set('renderingService.showTimeline', false);
-    this.set('renderingService.showVersionbar', true);
+    this.set('renderingService.showVersionbar', false);
   }
 }
 });
