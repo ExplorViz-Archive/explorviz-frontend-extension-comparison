@@ -5,9 +5,9 @@ export default visualizationController.extend({
 
     mergedRepo: Ember.inject.service('merged-repository'),
 
-  showVersionbar() {
-    this.set('renderingService.showVersionbar', true);
-  },
+  // showVersionbar() {
+  //   this.set('renderingService.showVersionbar', true);
+  // },
 
   showMergedLandscape: Ember.computed('mergedRepo.mergedApplication', function() {
     return !this.get('mergedRepo.mergedApplication');

@@ -1,16 +1,29 @@
 import Versionbar from 'explorviz-frontend/components/timestamp-versionbar';
 import layout from '../templates/components/versionbar-select';
+import AlertifyHandler from 'explorviz-frontend/mixins/alertify-handler';
+
 import Ember from 'ember';
 
-const {on} = Ember;
+const {on, inject} = Ember;
 
-export default Versionbar.extend({
+export default Versionbar.extend(AlertifyHandler, {
+mergedLoadService: inject.service('merged-load'),
+
 timestamps: [],
 layout,
 
 actions: {
   selectTimestamp(){
-  this.debug('selectedTimestamp: ', timestamps[1]);
+    this.debug('vor if, timestamps.length: ', this.timestamps.length);
+  if(this.timestamps.length === 2){
+
+  this.get('mergedLoadService').receiveMergedLandscape(this.timestamps);
+    this.debug('timestamps[1]', this.timestamps.pop());
+    this.debug('timestamps[0]', this.timestamps.pop());
+    this.debug('im if am ende, timestamps.length: ', this.timestamps.length);
+  }else{
+    this.showAlertifyMessage('Not 2 Timestamps selected. Please select a second, before you start comparing.');
+  }
 }
 },
 
@@ -50,9 +63,12 @@ actions: {
                   multiple: false
                 },
                 onclick: ((d) => {
-                  self.debug(dates[d.x + 1]);
-                  timestamps[1]=dates[d.x + 1];
-                })
+                  if(self.timestamps.length === 0){
+                    self.timestamps[0]=dates[d.x + 1];
+                  }else{
+                    self.timestamps[1]=dates[d.x + 1];
+                  }
+                  })
               },
               transition: {duration: 0},
               axis: {
