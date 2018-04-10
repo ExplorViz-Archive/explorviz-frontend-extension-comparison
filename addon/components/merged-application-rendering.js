@@ -137,16 +137,19 @@ export default ApplicationRendering.extend({
     //stop reloading landscape every 10th second, without this error occurs in the frontend, but it is visualized correctly
     //  this.get('reloadHandler').stopExchange();
     //exclude timeline
-    this.get('renderingService').set('showTimeline', false);
+    //this.get('renderingService').set('showTimeline', false);
 
 
-    this.preProcessEntity();
+    //this.preProcessEntity();
+    const application = this.get('store').peekRecord('application',
+      this.get('applicationID'));
+    this.set('mergedRepo.mergedApplication', application);
+
     const emberApplication = this.get('mergedRepo.mergedApplication');
-    this.debug('emberApplication: ', emberApplication);
+    this.debug('emberApplication in merged-application-rendering: ', emberApplication.get('name'));
     const viewCenterPoint = this.get('centerAndZoomCalculator.centerPoint');
 
     const cumulatedClazzCommunications = emberApplication.get('cumulatedClazzCommunications');
-
 
     cumulatedClazzCommunications.forEach((cumuClazzCommu) => {
 
@@ -179,24 +182,27 @@ export default ApplicationRendering.extend({
             transparent: transparent
           });
 
-          //TODO what about scenario: aggregatedCommunications contains 5 communications. 3 of them are ORIGINAL and 2 of them are ADDED How to color?
-          const aggregatedCommu = cumuClazzCommu.aggregatedCommunications.get(0);
-          if(!(toggleAdded || toggleEdited || toggleOriginal || toggleDeleted)){
-            material.color = new THREE.Color(communicationColorInactive);
-          }else  if(toggleAdded && aggregatedCommu.get('extensionAttributes.status') === added){
-            material.color = new THREE.Color(addedCommunicationColorActive);
+          const aggregatedCommus = cumuClazzCommu.get('aggregatedClazzCommunications');
 
-          }else if(toggleEdited && aggregatedCommu.get('extensionAttributes.status') === edited){
-            material.color = new THREE.Color(editedCommunicationColorActive);
+          aggregatedCommus.forEach((aggregatedCommu) =>{
+            const clazzCommus = aggregatedCommu.get('outgoingClazzCommunications');
+            clazzCommus.forEach((clazzCommu) => {
+              if(!(toggleAdded || toggleEdited || toggleOriginal || toggleDeleted)){
+                material.color = new THREE.Color(communicationColorInactive);
+              }else  if(toggleAdded && clazzCommu.get('extensionAttributes.status') === added){
+                material.color = new THREE.Color(addedCommunicationColorActive);
 
-          }else if(toggleOriginal && aggregatedCommu.get('extensionAttributes.status') === original){
-            material.color = new THREE.Color(originalCommunicationColorActive);
+              }else if(toggleEdited && clazzCommu.get('extensionAttributes.status') === edited){
+                material.color = new THREE.Color(editedCommunicationColorActive);
 
-          }else if(toggleDeleted && aggregatedCommu.get('extensionAttributes.status') === deleted){
-            material.color = new THREE.Color(deletedCommunicationColorActive);
-          }
+              }else if(toggleOriginal && clazzCommu.get('extensionAttributes.status') === original){
+                material.color = new THREE.Color(originalCommunicationColorActive);
 
-
+              }else if(toggleDeleted && clazzCommu.get('extensionAttributes.status') === deleted){
+                material.color = new THREE.Color(deletedCommunicationColorActive);
+              }
+            });
+});
 
           const thickness = cumuClazzCommu.get('lineThickness') * 0.3;
 
