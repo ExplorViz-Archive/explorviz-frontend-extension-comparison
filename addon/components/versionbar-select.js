@@ -4,7 +4,7 @@ import AlertifyHandler from 'explorviz-frontend/mixins/alertify-handler';
 
 import Ember from 'ember';
 
-const {on, inject} = Ember;
+const {on, inject, $} = Ember;
 
 export default Versionbar.extend(AlertifyHandler, {
 mergedLoadService: inject.service('merged-load'),
@@ -23,6 +23,29 @@ actions: {
     this.debug('im if am ende, timestamps.length: ', this.timestamps.length);
   }else{
     this.showAlertifyMessage('Not 2 Timestamps selected. Please select a second, before you start comparing.');
+  }
+},
+toggleVersionbarSelect() {
+  if ($(".versionbar").attr('vis') === 'show') {
+    // hide versionbar
+    this.set('isUp', false);
+    $(".versionbar").slideUp(400);
+    $("#vizContainer").animate({height:'+=120'});
+    $(".versionbar").attr('vis', 'hide');
+    $("#toggleVersionbarButton").removeClass('glyphicon-collapse-down')
+      .addClass('glyphicon-collapse-up');
+  }
+  else {
+    //fix position versionbar
+    $('#versionchart').attr('style', 'max-height:200px; position:absolute; display:block; bottom:80px');
+    // show versionbar
+    this.set('isUp', true);
+    $(".versionbar").slideDown('fast');
+    $("#vizContainer").animate({height:'-=120'});
+
+    $(".versionbar").attr('vis', 'show');
+    $("#toggleVersionbarButton").removeClass('glyphicon-collapse-up')
+      .addClass('glyphicon-collapse-down');
   }
 }
 },
@@ -51,6 +74,7 @@ actions: {
             dates.unshift('Labels');
 
             const chart = c3.generate({
+              bindto:'#versionchart',
               data: {
                 x: 'Labels',
                 columns: [dates, values],
