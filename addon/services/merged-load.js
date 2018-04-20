@@ -21,6 +21,7 @@ mergedRepo: inject.service('merged-repository'),
     function success(landscape){
       self.debug('in success(mergedLandscape)');
       self.set('mergedRepo.mergedLandscape', landscape);
+      self.get('mergedRepo').triggerUpdate();
       self.debug("end merged-landscape-fetch");
       self.get("store").adapterFor('landscape').set('namespace', 'landscape');
     }

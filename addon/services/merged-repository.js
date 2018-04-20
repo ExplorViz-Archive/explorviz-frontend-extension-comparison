@@ -6,4 +6,8 @@ export default LandscapeRepo.extend({
 
   mergedApplication: null,
 
+  triggerUpdate(){
+    this.trigger("merged", this.get("mergedLandscape"));
+  }
+
 });

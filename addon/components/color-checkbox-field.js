@@ -29,7 +29,7 @@ toggleEditedChanged: observer('toggleEdited', function(){
   this.get('renderingService').redrawScene();
 }),
 
-toggleDeletedChanged: observer('toggleEdited', function(){
+toggleDeletedChanged: observer('toggleDeleted', function(){
   this.get('renderingService').redrawScene();
 }),
 

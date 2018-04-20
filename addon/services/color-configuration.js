@@ -70,8 +70,8 @@ export default ConfigService.extend({
     foundation: "rgb(199,199,199)",
     componentOdd: "rgb(244, 232, 66)",
     componentEven: "",
-    clazz: "rgb(160, 151, 17)",
-    communication: "rgb(160, 151, 17)",
+    clazz: "rgb(239, 229, 83)",
+    communication: "rgb(239, 229, 83)",
     highlightedEntity: "rgb(255,0,0)",
   }
 });

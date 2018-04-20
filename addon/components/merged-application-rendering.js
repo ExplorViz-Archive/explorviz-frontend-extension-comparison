@@ -14,6 +14,34 @@ export default ApplicationRendering.extend({
   coreConfiguration: inject.service("configuration"),
   mergedRepo : inject.service("merged-repository"),
 
+// @Override
+cleanup() {
+  this._super(...arguments);
+
+  this.debug("cleanup application rendering");
+
+  // remove foundation for re-rendering
+  this.get('foundationBuilder').removeFoundation(this.get('store'));
+
+  this.set('applicationID', null);
+  this.set('application3D', null);
+
+  this.get('renderingService').off('redrawScene');
+
+  // clean up mergedRepo for visualization template
+  this.set('mergedRepo.mergedApplication', null);
+
+  this.get('interaction').removeHandlers();
+},
+
+// initRendering(){
+//   this._super(...arguments);
+//   const self = this;
+//   this.get('mergedRepo').on("merged", function() {
+//     self.onUpdated();
+//   });
+// },
+
   //coloring of components and classes
   addComponentToScene(component){
     this._super(...arguments);
@@ -65,7 +93,6 @@ export default ApplicationRendering.extend({
 
     const clazzes = component.get('clazzes');
     clazzes.forEach((clazz) => {
-
       if (component.get('opened')) {
         if (clazz.get('highlighted')) {
           this.createBox(clazz, 0xFF0000, true);
@@ -73,8 +100,8 @@ export default ApplicationRendering.extend({
           this.createBox(clazz, addedClazzColorActive, true);
         }else if (toggleOriginal && clazz.get('extensionAttributes.status') === original){
           this.createBox(clazz, originalClazzColorActive, true);
-        }else if(toggleDeleted && component.get('extensionAttributes.status') === deleted){
-            this.createBox(clazz, deletedClazzColorActive, true);
+        }else if(toggleDeleted && clazz.get('extensionAttributes.status') === deleted){
+          this.createBox(clazz, deletedClazzColorActive, true);
         }else{
           this.createBox(clazz, clazzColorInactive, true);
         }
@@ -134,19 +161,13 @@ export default ApplicationRendering.extend({
     const deletedCommunicationColorActive = this.get('configurationService').get('deletedApplicationColors.communication');
     const communicationColorInactive = this.get('configurationService').get('inactiveApplicationColors.communication');
 
-    //stop reloading landscape every 10th second, without this error occurs in the frontend, but it is visualized correctly
-    //  this.get('reloadHandler').stopExchange();
-    //exclude timeline
-    //this.get('renderingService').set('showTimeline', false);
-
-
     //this.preProcessEntity();
     const application = this.get('store').peekRecord('application',
-      this.get('applicationID'));
+    this.get('applicationID'));
     this.set('mergedRepo.mergedApplication', application);
 
     const emberApplication = this.get('mergedRepo.mergedApplication');
-    this.debug('emberApplication in merged-application-rendering: ', emberApplication.get('name'));
+
     const viewCenterPoint = this.get('centerAndZoomCalculator.centerPoint');
 
     const cumulatedClazzCommunications = emberApplication.get('cumulatedClazzCommunications');
@@ -162,11 +183,11 @@ export default ApplicationRendering.extend({
         end.subVectors(cumuClazzCommu.get('endPoint'), viewCenterPoint);
         end.multiplyScalar(0.5);
 
-        if(start.y >= end.y) {
-          end.y = start.y;
-        } else {
-          start.y = end.y;
-        }
+        // if(start.y >= end.y) {
+        //   end.y = start.y;
+        // } else {
+        //   start.y = end.y;
+        // }
 
         let transparent = false;
         let opacityValue = 1.0;
@@ -176,42 +197,36 @@ export default ApplicationRendering.extend({
           opacityValue = 0.4;
         }
 
-          const material = new THREE.MeshBasicMaterial({
-            color : new THREE.Color(communicationColorInactive),
-            opacity: opacityValue,
-            transparent: transparent
-          });
+        const material = new THREE.MeshBasicMaterial({
+          color : new THREE.Color(communicationColorInactive),
+          opacity: opacityValue,
+          transparent: transparent
+        });
 
-          const aggregatedCommus = cumuClazzCommu.get('aggregatedClazzCommunications');
+        if(!(toggleAdded || toggleEdited || toggleOriginal || toggleDeleted)){
+          material.color = new THREE.Color(communicationColorInactive);
+        }else  if(toggleAdded && cumuClazzCommu.get('extensionAttributes.status') === added){
+          material.color = new THREE.Color(addedCommunicationColorActive);
 
-          aggregatedCommus.forEach((aggregatedCommu) =>{
-            const clazzCommus = aggregatedCommu.get('outgoingClazzCommunications');
-            clazzCommus.forEach((clazzCommu) => {
-              if(!(toggleAdded || toggleEdited || toggleOriginal || toggleDeleted)){
-                material.color = new THREE.Color(communicationColorInactive);
-              }else  if(toggleAdded && clazzCommu.get('extensionAttributes.status') === added){
-                material.color = new THREE.Color(addedCommunicationColorActive);
+        }else if(toggleEdited && cumuClazzCommu.get('extensionAttributes.status') === edited){
+          material.color = new THREE.Color(editedCommunicationColorActive);
 
-              }else if(toggleEdited && clazzCommu.get('extensionAttributes.status') === edited){
-                material.color = new THREE.Color(editedCommunicationColorActive);
+        }else if(toggleOriginal && cumuClazzCommu.get('extensionAttributes.status') === original){
+          material.color = new THREE.Color(originalCommunicationColorActive);
 
-              }else if(toggleOriginal && clazzCommu.get('extensionAttributes.status') === original){
-                material.color = new THREE.Color(originalCommunicationColorActive);
-
-              }else if(toggleDeleted && clazzCommu.get('extensionAttributes.status') === deleted){
-                material.color = new THREE.Color(deletedCommunicationColorActive);
-              }
-            });
-});
-
-          const thickness = cumuClazzCommu.get('lineThickness') * 0.3;
-
-          const pipe = this.cylinderMesh(start, end, material, thickness);
-
-          pipe.userData.model = cumuClazzCommu;
-          self.get('application3D').add(pipe);
-
+        }else if(toggleDeleted && cumuClazzCommu.get('extensionAttributes.status') === deleted){
+          material.color = new THREE.Color(deletedCommunicationColorActive);
         }
+
+
+        const thickness = cumuClazzCommu.get('lineThickness') * 0.3;
+
+        const pipe = this.cylinderMesh(start, end, material, thickness);
+
+        pipe.userData.model = cumuClazzCommu;
+        self.get('application3D').add(pipe);
+
+      }
     });//End commu.forEach
   } //End populateScene()
 

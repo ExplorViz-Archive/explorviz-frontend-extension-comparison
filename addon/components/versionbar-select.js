@@ -56,7 +56,14 @@ toggleVersionbarSelect() {
 
     this.debug('in component versionbar-select init');
           },
-
+          // @Override
+          // Cleanup
+          willDestroyElement() {
+            //workaround: hide versionbar, otherwise timeline gets broken
+            this.hideVersionbar();
+            this.get('timestampRepo').off('uploaded');
+          },
+          
           renderPlot: on('didRender', function() {
 
             const self = this;
