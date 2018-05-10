@@ -5,7 +5,12 @@ import AlertifyHandler from 'explorviz-frontend/mixins/alertify-handler';
 import Ember from 'ember';
 
 const {on, inject, $} = Ember;
-
+/**
+*Extends the versionbar from the frontend core to the effect that
+*the user can select two data points for comparison.
+* @class Versionbar-Select-Component
+* @extends Timestamp-Versionbar-Component
+*/
 export default Versionbar.extend(AlertifyHandler, {
 mergedLoadService: inject.service('merged-load'),
 
@@ -63,7 +68,7 @@ toggleVersionbarSelect() {
             this.hideVersionbar();
             this.get('timestampRepo').off('uploaded');
           },
-          
+
           renderPlot: on('didRender', function() {
 
             const self = this;
@@ -96,8 +101,10 @@ toggleVersionbarSelect() {
                 onclick: ((d) => {
                   if(self.timestamps.length === 0){
                     self.timestamps[0]=dates[d.x + 1];
+                    self.showAlertifyMessage('You selected the first landscape for comparison. Please, select a second one.');
                   }else{
                     self.timestamps[1]=dates[d.x + 1];
+                    self.showAlertifyMessage('You selected two landscapes for comparison. Please, click <b>Compare</b>.');
                   }
                   })
               },
