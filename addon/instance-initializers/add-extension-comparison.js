@@ -1,5 +1,8 @@
 import Router from "explorviz-frontend/router";
 
+/**
+* Register to frontend core and init settings.
+*/
 export function initialize(appInstance) {
 
   const service = appInstance.lookup("service:page-setup");

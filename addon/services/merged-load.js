@@ -1,16 +1,20 @@
-import Ember from 'ember';
 import AlertifyHandler from 'explorviz-frontend/mixins/alertify-handler';
+import { inject as service } from "@ember/service";
+import Service from '@ember/service';
 
-const {Service, inject} = Ember;
-
+/**
+* This service loads the merged landscape.
+*
+* @class Merged-Load-Service
+* @extends Ember.Service
+*/
 export default Service.extend(AlertifyHandler, {
 
-store: inject.service('store'),
-mergedRepo: inject.service('merged-repository'),
+store: service('store'),
+mergedRepo: service('merged-repository'),
 
 
   receiveMergedLandscape(timestamps){
-    this.debug('timestamps in service merged-load: ', timestamps);
     const self = this;
 
     this.debug("start merged-landscape-fetch");
@@ -19,7 +23,6 @@ mergedRepo: inject.service('merged-repository'),
 
     //------------- Start of inner functions of updateObject ---------------
     function success(landscape){
-      self.debug('in success(mergedLandscape)');
       self.set('mergedRepo.mergedLandscape', landscape);
       self.get('mergedRepo').triggerUpdate();
       self.debug("end merged-landscape-fetch");

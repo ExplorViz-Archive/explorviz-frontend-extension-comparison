@@ -3,14 +3,16 @@ import layout from '../templates/components/color-checkbox-field';
 import { alias } from '@ember/object/computed';
 import { observer} from '@ember/object';
 import { inject as service } from "@ember/service";
-import Ember from 'ember';
 
-const {inject} = Ember;
-
+/**
+*Adds toggle buttons for highlighting.
+* @class Color-Checkbox-Field-Component
+* @extends Visualization-Navbar-Component
+*/
 export default VisualizationNavbar.extend({
 layout,
 
-renderingService: inject.service("rendering-service"),
+renderingService: service("rendering-service"),
 configuration: service("configuration"),
 toggleOriginal: alias('configuration.comparisonSettings.toggleOriginal'),
 toggleAdded: alias('configuration.comparisonSettings.toggleAdded'),

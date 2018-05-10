@@ -1,46 +1,40 @@
 import ApplicationRendering from 'explorviz-frontend/components/visualization/rendering/application-rendering';
 import layout from '../templates/components/merged-application-rendering';
-import Ember from 'ember';
 import THREE from "npm:three";
+import { inject as service } from "@ember/service";
 
-
-const {inject} = Ember;
-
+/**
+*Adds coloring based on the status of an element to the application rendering from the frontend core.
+* @class Merged-Application-Rendering-Component
+* @extends Application-Rendering-Component
+*/
 export default ApplicationRendering.extend({
   layout,
-  reloadHandler: inject.service("reload-handler"),
-  renderingService: inject.service("rendering-service"),
-  configurationService: inject.service("color-configuration"),
-  coreConfiguration: inject.service("configuration"),
-  mergedRepo : inject.service("merged-repository"),
+  reloadHandler: service("reload-handler"),
+  renderingService: service("rendering-service"),
+  configurationService: service("color-configuration"),
+  coreConfiguration: service("configuration"),
+  mergedRepo : service("merged-repository"),
 
-// @Override
-cleanup() {
-  this._super(...arguments);
+  // @Override
+  cleanup() {
+    this._super(...arguments);
 
-  this.debug("cleanup application rendering");
+    this.debug("cleanup application rendering");
 
-  // remove foundation for re-rendering
-  this.get('foundationBuilder').removeFoundation(this.get('store'));
+    // remove foundation for re-rendering
+    this.get('foundationBuilder').removeFoundation(this.get('store'));
 
-  this.set('applicationID', null);
-  this.set('application3D', null);
+    this.set('applicationID', null);
+    this.set('application3D', null);
 
-  this.get('renderingService').off('redrawScene');
+    this.get('renderingService').off('redrawScene');
 
-  // clean up mergedRepo for visualization template
-  this.set('mergedRepo.mergedApplication', null);
+    // clean up mergedRepo for visualization template
+    this.set('mergedRepo.mergedApplication', null);
 
-  this.get('interaction').removeHandlers();
-},
-
-// initRendering(){
-//   this._super(...arguments);
-//   const self = this;
-//   this.get('mergedRepo').on("merged", function() {
-//     self.onUpdated();
-//   });
-// },
+    this.get('interaction').removeHandlers();
+  },
 
   //coloring of components and classes
   addComponentToScene(component){
@@ -57,22 +51,17 @@ cleanup() {
 
     const clazzColorInactive = this.get('configurationService').get('inactiveApplicationColors.clazz');
     const oddComponentColorInactive = this.get('configurationService').get('inactiveApplicationColors.componentOdd');
-    // const evenComponentColorInactive = this.get('configurationService').get('inactiveApplicationColors.evenComponent');
 
     const addedClazzColorActive = this.get('configurationService').get('addedApplicationColors.clazz');
     const addedOddComponentColorActive = this.get('configurationService').get('addedApplicationColors.componentOdd');
-    //const addedEvenComponentColorActive = this.get('configurationService').get('addedApplicationColors.componentEven');
 
     const editedOddComponentColorActive = this.get('configurationService').get('editedApplicationColors.componentOdd');
-    //  const editedEvenComponentColorActive = this.get('configurationService').get('editedApplicationColors.componentEven');
 
     const originalClazzColorActive = this.get('configurationService').get('originalApplicationColors.clazz');
     const originalOddComponentColorActive = this.get('configurationService').get('originalApplicationColors.componentOdd');
-    //  const originalEvenComponentColorActive = this.get('configurationService').get('originalApplicationColors.componentEven');
 
     const deletedClazzColorActive = this.get('configurationService').get('deletedApplicationColors.clazz');
     const deletedOddComponentColorActive = this.get('configurationService').get('deletedApplicationColors.componentOdd');
-    //  const deletedEvenComponentColorActive = this.get('configurationService').get('deletedApplicationColors.componentEven');
 
     if(toggleAdded && component.get('extensionAttributes.status') === added){
       this.createBox(component, addedOddComponentColorActive, false);
@@ -108,37 +97,6 @@ cleanup() {
       }
     });
 
-    //TODO color difference for better visibility
-    // children.forEach((child) => {
-    //   if (component.get('opened')) {
-    //     if (child.get('opened')) {
-    //       if(child.get('highlighted')) {
-    //         this.addComponentToScene(child, redHighlighted);
-    //       }
-    //       else if(component.get('color') === grey) {
-    //         this.addComponentToScene(child, lightGreen);
-    //       }
-    //       else if(component.get('color') === darkGreen) {
-    //         this.addComponentToScene(child, lightGreen);
-    //       } else {
-    //         this.addComponentToScene(child, darkGreen);
-    //       }
-    //     }
-    //     else {
-    //       if(child.get('highlighted')) {
-    //         this.addComponentToScene(child, redHighlighted);
-    //       }
-    //       else if(component.get('color') === grey) {
-    //         this.addComponentToScene(child, lightGreen);
-    //       }
-    //       else if(component.get('color') === darkGreen) {
-    //         this.addComponentToScene(child, lightGreen);
-    //       } else {
-    //         this.addComponentToScene(child, darkGreen);
-    //       }
-    //     }
-    //   }
-    // });
   },
 
   //coloring of communication
@@ -161,7 +119,6 @@ cleanup() {
     const deletedCommunicationColorActive = this.get('configurationService').get('deletedApplicationColors.communication');
     const communicationColorInactive = this.get('configurationService').get('inactiveApplicationColors.communication');
 
-    //this.preProcessEntity();
     const application = this.get('store').peekRecord('application',
     this.get('applicationID'));
     this.set('mergedRepo.mergedApplication', application);
@@ -182,12 +139,6 @@ cleanup() {
         const end = new THREE.Vector3();
         end.subVectors(cumuClazzCommu.get('endPoint'), viewCenterPoint);
         end.multiplyScalar(0.5);
-
-        // if(start.y >= end.y) {
-        //   end.y = start.y;
-        // } else {
-        //   start.y = end.y;
-        // }
 
         let transparent = false;
         let opacityValue = 1.0;
