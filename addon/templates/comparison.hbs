@@ -1,6 +1,6 @@
 {{#if showMergedLandscape}}
   {{#if mergedRepo.mergedLandscape.systems}}
-    {{merged-landscape-rendering}}
+    {{merged-landscape-rendering latestLandscape=mergedRepo.mergedLandscape}}
   {{else}}
     <div class="container-fluid">
       <div class="jumbotron">
@@ -13,7 +13,7 @@
     </div>
   {{/if}}
 {{else}}
-{{color-checkbox-field}}
-{{merged-application-rendering}}
+  {{color-checkbox-field}}
+  {{merged-application-rendering latestApplication=mergedRepo.mergedApplication}}
 {{/if}}
 {{versionbar-select}}

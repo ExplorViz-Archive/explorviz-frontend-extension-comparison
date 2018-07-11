@@ -1,6 +1,6 @@
 import ApplicationRendering from 'explorviz-frontend/components/visualization/rendering/application-rendering';
 import layout from '../templates/components/merged-application-rendering';
-import THREE from "npm:three";
+import THREE from "three";
 import { inject as service } from "@ember/service";
 
 /**
