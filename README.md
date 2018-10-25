@@ -1,6 +1,6 @@
 # explorviz-frontend-extension-comparison
 
-This repository holds an extension for [ExplorViz Frontend](https://github.com/ExplorViz/explorviz-frontend) that enables the user to compare two application models.
+This repository holds an extension for [ExplorViz Frontend](https://github.com/ExplorViz/explorviz-frontend) that enables the user to compare two application models. (Work-In-Progress)
 The related backend extension is [explorviz-backend-extension-comparison](https://github.com/ExplorViz/explorviz-backend-extension-comparison).
 
 
