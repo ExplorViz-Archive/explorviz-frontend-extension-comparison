@@ -1,5 +1,5 @@
-import BaseRoute from 'explorviz-frontend/routes/base-route';
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import VisualizationRoute from 'explorviz-frontend/routes/visualization';
 
-export default BaseRoute.extend(AuthenticatedRouteMixin, {
+export default VisualizationRoute.extend({
+	
 });
