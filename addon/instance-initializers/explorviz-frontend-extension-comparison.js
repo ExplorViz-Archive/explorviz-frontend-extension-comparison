@@ -1,14 +1,26 @@
 import Router from "explorviz-frontend/router";
 
 export function initialize(appInstance) {
-  const service = appInstance.lookup("service:page-setup");
-  
-  if(service) {
-	  service.get("navbarRoutes").push("comparison");
+  const pageSetupService = appInstance.lookup("service:page-setup");
+  const configurationService = appInstance.lookup("service:configuration");
+
+  if(pageSetupService) {
+	  pageSetupService.get("navbarRoutes").push("comparison");
   }
-  
+
+  if(configurationService) {
+    const mergedApplicationColors = {
+      addedComponentOdd: "rgb(255, 0, 0)",
+      addedComponentEven: "rgb(255, 0, 0)",
+      deletedComponentOdd: "rgb(255, 0, 0)",
+      deletedComponentEven: "rgb(255, 0, 0)",
+    }
+
+    configurationService.get("configurationExtensions").push(mergedApplicationColors);
+  }
+
   Router.map(function() {
-	this.route("comparison");
+    this.route("comparison");
   });
 }
 

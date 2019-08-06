@@ -1,0 +1,1 @@
+export { default } from 'explorviz-frontend-extension-comparison/services/load-merged-landscape';

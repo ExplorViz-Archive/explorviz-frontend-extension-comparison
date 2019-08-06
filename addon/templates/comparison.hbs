@@ -1,4 +1,5 @@
 <div class="row" style="max-height:100%">
+  <button {{action "pressButton"}}>{{this.model.test}}</button>
   <div class="col-12" id="vizspace" {{did-resize this.resize debounce=100}}>
     {{#if showLandscape}}
       {{#if landscapeRepo.latestLandscape.systems}}
