@@ -1,8 +1,9 @@
 import BaseRoute from 'explorviz-frontend/routes/base-route';
 
 export default BaseRoute.extend({
-	model() {
-		return {test: 'Button'};
+	setupController(controller, model) {
+		this._super(controller, model);
+		controller.initRendering();
 	},
 
 	actions: {
@@ -15,7 +16,6 @@ export default BaseRoute.extend({
 
 		// @Override
 		didTransition() {
-			this.controller.hideVersionbar();
 			this.controller.showTimeline();
 		}
 	}
