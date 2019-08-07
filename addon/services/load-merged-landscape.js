@@ -55,6 +55,31 @@ export default Service.extend(AlertifyHandler, Evented, {
       self.set('landscapeRepo.latestLandscape', undefined);
       self.debug("Error when fetching landscape: ", e);
     }
+  },
+
+  loadHistoryByTimestamps(timestamps) {
+    const self = this;
+
+    self.debug("Start import history");
+
+    self.get('store').queryRecord('history', { timestamps: timestamps}).then(success, failure).catch(error);
+
+    function success(history) {
+      self.set('landscapeRepo.latestHistory', history);
+      self.debug("end import history request");
+    }
+
+    function failure(e) {
+      self.set('landscapeRepo.latestHistory', undefined);
+      self.showAlertifyMessage("History couldn't be requested!" +
+        " Backend offline?");
+      self.debug("History couldn't be requested!", e);
+    }
+
+    function error(e) {
+      self.set('landscapeRepo.latestHistory', undefined);
+      self.debug("Error when fetching history: ", e);
+    }
   }
 
 });

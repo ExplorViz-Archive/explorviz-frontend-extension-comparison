@@ -8,6 +8,8 @@ export default Service.extend(Evented, {
   replayLandscape: null,
   replayApplication: null,
 
+  latestHistory: null,
+
   triggerLatestLandscapeUpdate() {
     this.trigger('updated', this.get('latestLandscape'));
   }
