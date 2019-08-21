@@ -106,18 +106,28 @@ export default class PlotlyTimeline extends Component.extend({
         const clickedTimestamp = new Date(data.points[0].x);
         get(self, "_selectedTimestamps").push(clickedTimestamp.getTime());
 
-        if(get(self, "selectionCount") > 1) {
+        if(get(self, "_selectedTimestamps").length == get(self, "selectionCount")) {
+          let timestampsInMillis = [];
 
-          if(get(self, "_selectedTimestamps").length == get(self, "selectionCount")) {
-            self.clicked(get(self, "_selectedTimestamps"));
+          for(const timestamp of get(self, "timestamps")) {
+            timestampsInMillis.push(timestamp.get("timestamp"));
           }
 
-        } else {
-          // closure action
-          self.clicked(get(self, "_selectedTimestamps"));
+          let index0 = timestampsInMillis.indexOf(get(self, "_selectedTimestamps")[0]);
+          let index1 = timestampsInMillis.indexOf(get(self, "_selectedTimestamps")[1]);
+
+          if(index0 == -1 || index1 == -1) {
+            return;
+          }
+
+          if(index0 > index1) {
+            let temp = index0;
+            index0 = index1;
+            index1 = temp;
+          }
+
+          self.clicked(timestampsInMillis.slice(index0, index1 + 1));
         }
-
-
       });
 
       // double click
