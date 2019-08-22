@@ -11,6 +11,7 @@ export default Service.extend(AlertifyHandler, Evented, {
 
   store: service(),
   landscapeRepo: service("merged-landscape-repository"),
+  landscapeListener: service('landscape-listener'),
 
   debug: debugLogger(),
   modelUpdater: null,
@@ -32,9 +33,13 @@ export default Service.extend(AlertifyHandler, Evented, {
 
     self.debug("Start import merged landscape-request");
 
-    self.get('store').queryRecord('landscape', '/comparison/merged' , { timestamp1: timestamp1, timestamp2: timestamp2 }).then(success, failure).catch(error);
+
+
+    self.get('store').queryRecord('merged-landscape', { timestamp1: timestamp1, timestamp2: timestamp2 }).then(success, failure).catch(error);
 
     function success(landscape) {
+      console.log("Importing landscapes: " + [timestamp1, timestamp2]);
+
       // Pause the visulization
       self.get('modelUpdater').addDrawableCommunication();
 

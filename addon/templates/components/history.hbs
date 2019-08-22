@@ -1,0 +1,43 @@
+<div class="sidebar-component-title">
+  <h5>History</h5>
+</div>
+
+<div class="sidebar-component-close">
+  <label {{action "close"}} title="Close History" aria-label="Close">
+    <font size="6">&times;</font>
+  </label>
+</div>
+
+<div style="max-height:500px; overflow:auto; width:100%;">
+  <table class="table table-hover">
+    <thead>
+      <tr style="cursor: pointer">
+        <th {{action "sortBy" "traceId"}} scope="col">Trace ID</th>
+        <th {{action "sortBy" "sourceClazz.name"}} scope="col">Soure Clazz</th>
+        <th {{action "sortBy" "targetClazz.name"}} scope="col">Target Clazz</th>
+        <th {{action "sortBy" "totalTraceDuration"}} scope="col">Duration in
+          {{#bs-button onClick=(action "toggleTraceTimeUnit") class="th-btn" outline=true}}{{traceTimeUnit}}{{/bs-button}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each traces as |trace|}}
+      {{#if trace.highlighted}}
+      <tr {{action "clickedTrace" trace}} style="cursor: pointer" bgcolor="#cc8a8a">
+        <th title={{trace.traceId}}>{{string-shortener trace.traceId 7}}</th>
+        <td title={{trace.sourceClazz.name}}>{{string-shortener trace.sourceClazz.name 11}}</td>
+        <td title={{trace.targetClazz.name}}>{{string-shortener trace.targetClazz.name 13}}</td>
+        <td>{{format-number trace.totalTraceDuration traceTimeUnit }}</td>
+      </tr>
+      {{else}}
+      <tr {{action "clickedTrace" trace}} style="cursor: pointer">
+        <th title={{trace.traceId}}>{{string-shortener trace.traceId 7}}</th>
+        <td title={{trace.sourceClazz.name}}>{{string-shortener trace.sourceClazz.name 11}}</td>
+        <td title={{trace.targetClazz.name}}>{{string-shortener trace.targetClazz.name 13}}</td>
+        <td>{{format-number trace.totalTraceDuration traceTimeUnit }}</td>
+      </tr>
+      {{/if}}
+      {{/each}}
+    </tbody>
+  </table>
+</div>

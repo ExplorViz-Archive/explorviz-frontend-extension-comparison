@@ -4,5 +4,5 @@ import {inject as service} from '@ember/service'
 
 export default LandscapeRendering.extend({
 	layout,
-	landscapeRepo: service('merged-landscape-repository')
+	landscapeRepo: service('merged-landscape-repository'),
 });

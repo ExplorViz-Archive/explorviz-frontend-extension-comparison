@@ -19,17 +19,20 @@ export default ApplicationRendering.extend({
     const clazzColor = this.get('configuration.applicationColors.clazz');
     const highlightedEntityColor = this.get('configuration.applicationColors.highlightedEntity');
 
-    const statusAttribute = component.get('extensionAttributes.status');
+    const statusAttribute = component.get('extensionAttributes');
+    console.log(statusAttribute);
 
-    if(statusAttribute == added) {
+    if(statusAttribute == 'ADDED') {
       componentOddColor = this.get('configuration.configurationExtensions.mergedApplicationColors.addedComponentOdd');
       componentEvenColor = this.get('configuration.configurationExtensions.mergedApplicationColors.addedComponentEven');
-    } else if(statusAttribute = deleted) {
+    } else if(statusAttribute == 'REMOVED') {
       componentOddColor = this.get('configuration.configurationExtensions.mergedApplicationColors.deletedComponentOdd');
       componentEvenColor = this.get('configuration.configurationExtensions.mergedApplicationColors.deletedComponentEven');
-    } else {
+    } else if (statusAttribute == 'ORIGINAL'){
       componentOddColor = this.get('configuration.applicationColors.componentOdd');
       componentEvenColor = this.get('configuration.applicationColors.componentEven');
+    } else {
+      console.log('Attribute not defined!');
     }
 
     this.createBox(component, color, false);
