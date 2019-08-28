@@ -16,23 +16,20 @@ export default ApplicationRendering.extend({
     const foundationColor = this.get('configuration.applicationColors.foundation');
     let componentOddColor;
     let componentEvenColor;
-    const clazzColor = this.get('configuration.applicationColors.clazz');
+
     const highlightedEntityColor = this.get('configuration.applicationColors.highlightedEntity');
 
-    const statusAttribute = component.get('extensionAttributes');
-    console.log(statusAttribute);
+    const statusAttribute = component.get('extensionAttributes.status');
 
     if(statusAttribute == 'ADDED') {
       componentOddColor = this.get('configuration.configurationExtensions.mergedApplicationColors.addedComponentOdd');
       componentEvenColor = this.get('configuration.configurationExtensions.mergedApplicationColors.addedComponentEven');
-    } else if(statusAttribute == 'REMOVED') {
+    } else if(statusAttribute == 'DELETED') {
       componentOddColor = this.get('configuration.configurationExtensions.mergedApplicationColors.deletedComponentOdd');
       componentEvenColor = this.get('configuration.configurationExtensions.mergedApplicationColors.deletedComponentEven');
     } else if (statusAttribute == 'ORIGINAL'){
       componentOddColor = this.get('configuration.applicationColors.componentOdd');
       componentEvenColor = this.get('configuration.applicationColors.componentEven');
-    } else {
-      console.log('Attribute not defined!');
     }
 
     this.createBox(component, color, false);
@@ -44,9 +41,21 @@ export default ApplicationRendering.extend({
 
     clazzes.forEach((clazz) => {
       if (component.get('opened')) {
+
         if (clazz.get('highlighted')) {
           this.createBox(clazz, highlightedEntityColor, true);
         } else {
+          const clazzAttribute = clazz.get('extensionAttributes.status');
+          let clazzColor;
+
+          if(clazzAttribute == 'ADDED') {
+            clazzColor = this.get('configuration.configurationExtensions.mergedApplicationColors.addedClazz');
+          } else if (clazzAttribute == 'DELETED') {
+            clazzColor = this.get('configuration.configurationExtensions.mergedApplicationColors.deletedClazz');
+          } else if (statusAttribute == 'ORIGINAL') {
+            clazzColor = this.get('configuration.applicationColors.clazz');
+          }
+
           this.createBox(clazz, clazzColor, true);
         }
       }

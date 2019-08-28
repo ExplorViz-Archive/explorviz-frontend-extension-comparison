@@ -14,6 +14,8 @@ export function initialize(appInstance) {
       addedComponentEven: "rgb(255, 0, 0)",
       deletedComponentOdd: "rgb(255, 0, 0)",
       deletedComponentEven: "rgb(255, 0, 0)",
+      addedClazz: "rgb(255, 0 0)",
+      deletedClazz: "rgb(255, 0, 0)"
     }
 
     configurationService.get("configurationExtensions").push(mergedApplicationColors);
