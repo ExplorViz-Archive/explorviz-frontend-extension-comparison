@@ -71,6 +71,7 @@ export default Service.extend(AlertifyHandler, Evented, {
 
     function success(history) {
       self.set('landscapeRepo.latestHistory', history);
+      console.log(history);
       self.debug("end import history request");
     }
 

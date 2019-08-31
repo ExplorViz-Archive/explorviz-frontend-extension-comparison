@@ -1,6 +1,8 @@
 import DS from 'ember-data';
-const { Model } = DS;
+const { attr } = DS;
 
-export default Model.extend({
+export default class History extends DS.Model {
+  @attr() componentHistory!: any;
+  @attr() clazzHistory!: any;
 
-});
+}

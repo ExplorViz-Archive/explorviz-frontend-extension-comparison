@@ -20,7 +20,7 @@ export default ApplicationRendering.extend({
     const highlightedEntityColor = this.get('configuration.applicationColors.highlightedEntity');
 
     const statusAttribute = component.get('extensionAttributes.status');
-
+    
     if(statusAttribute == 'ADDED') {
       componentOddColor = this.get('configuration.configurationExtensions.mergedApplicationColors.addedComponentOdd');
       componentEvenColor = this.get('configuration.configurationExtensions.mergedApplicationColors.addedComponentEven');

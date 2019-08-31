@@ -18,7 +18,14 @@ export function initialize(appInstance) {
       deletedClazz: "rgb(255, 0, 0)"
     }
 
+    const comparisonToggle = {
+      added: true,
+      deleted: true,
+      original: true
+    }
+
     configurationService.get("configurationExtensions").push(mergedApplicationColors);
+    configurationService.get("configurationExtensions").push(comparisonToggle);
   }
 
   Router.map(function() {
