@@ -5,7 +5,7 @@ export function initialize(appInstance) {
   const configurationService = appInstance.lookup("service:configuration");
 
   if(pageSetupService) {
-	  pageSetupService.get("navbarRoutes").push("comparison");
+    pageSetupService.get("navbarRoutes").push("comparison");
   }
 
   if(configurationService) {

@@ -1,3 +1,11 @@
+<div class="mb-1">
+    <div class="float-right">
+        <input id="selectBoxUploadLandscape" onchange={{action "uploadLandscape"}} type="file" style="display:none;" />
+        {{#bs-button type="success" outline=true onClick=(action "triggerSelectBox") title="Upload a landscape"}}{{svg-jar "cloud-upload"}}
+        <span>Upload landscape</span>{{/bs-button}}
+    </div>
+</div>
+
 <div class="row" style="max-height:100%">
   <div class="col-12" id="vizspace" {{did-resize this.resize debounce=100}}>
     {{#if showLandscape}}
@@ -29,6 +37,7 @@
           (component "history-overview")
           (component "visualization/page-setup/navbar/application-opener")
           (component "visualization/page-setup/navbar/application-search")
+          (component "status-filter")
         )
       }}
       <div id="rendering">
@@ -56,11 +65,8 @@
         {{svg-jar "chevron-up" id="hidetimeline-icon" class=(if renderingService.showTimeline "octicon align-middle hidetimeline-icon-down" "octicon align-middle")}}
       {{/bs-button}}
       <div id="timeline" class="timeline {{unless renderingService.showTimeline "timelinehide"}}">
-        {{comparison-timeline timestamps=timestampRepo.timelineTimestamps clicked=(action 'timelineClicked')}}
+        {{comparison-timeline timestamps=landscapeRepo.timestamps clicked=(action 'timelineClicked')}}
       </div>
-    </div>
-    <div class="text-center">
-      <button class="btn btn-primary" style="outline: none!important" {{action "compareLandscapes"}}>Compare</button>
     </div>
   </div>
   <div class="col-4 hide" id="dataselection">

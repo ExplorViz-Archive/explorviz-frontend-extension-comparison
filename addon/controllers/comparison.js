@@ -16,8 +16,19 @@ export default VisualizationController.extend({
     },
 
     timelineClicked(timestamps) {
+      console.log(timestamps);
       this.get('loadService').loadMergedLandscapeByTimestamps(timestamps[0], timestamps[timestamps.length - 1]);
       this.get('loadService').loadHistoryByTimestamps(timestamps);
+    },
+
+    triggerSelectBox() {
+      let queryBox = document.querySelector("#selectBoxUploadLandscape") as HTMLElement;
+      queryBox.click();
+    },
+
+    // upload a landscape to the backend
+    uploadLandscape(evt) {
+      this.get('loadService').uploadLandscape(evt);
     }
   }
 });

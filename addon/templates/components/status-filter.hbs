@@ -1,0 +1,29 @@
+{{#if this.configuration.comparisonToggle.added}}
+<li class="nav-item mx-2">
+  <button class="nav-link btn btn-sm btn-outline-secondary" {{action toggleAddedButton}} type="button">Hide Added</button>
+</li>
+{{else}}
+<li class="nav-item mx-2">
+  <button class="nav-link btn btn-sm btn-outline-secondary" {{action toggleAddedButton}} type="button">Show Added</button>
+</li>
+{{/if}}
+
+{{#if this.configuration.comparisonToggle.deleted}}
+<li class="nav-item mx-2">
+  <button class="nav-link btn btn-sm btn-outline-secondary" {{action toggleDeletedButton}} type="button">Hide Deleted</button>
+</li>
+{{else}}
+<li class="nav-item mx-2">
+  <button class="nav-link btn btn-sm btn-outline-secondary" {{action toggleDeletedButton}} type="button">Show Deleted</button>
+</li>
+{{/if}}
+
+{{#if this.configuration.comparisonToggle.original}}
+<li class="nav-item mx-2">
+  <button class="nav-link btn btn-sm btn-outline-secondary" {{action toggleOriginalButton}} type="button">Hide Original</button>
+</li>
+{{else}}
+<li class="nav-item mx-2">
+  <button class="nav-link btn btn-sm btn-outline-secondary" {{action toggleOriginalButton}} type="button">Show Original</button>
+</li>
+{{/if}}

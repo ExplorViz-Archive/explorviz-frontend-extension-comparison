@@ -5,8 +5,7 @@ export default Service.extend(Evented, {
   latestLandscape: null,
   latestApplication: null,
 
-  replayLandscape: null,
-  replayApplication: null,
+  timestamps: [],
 
   latestHistory: null,
 
