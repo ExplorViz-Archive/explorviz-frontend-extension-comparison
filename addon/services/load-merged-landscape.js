@@ -37,8 +37,6 @@ export default Service.extend(AlertifyHandler, Evented, {
 
     self.debug("Start import merged landscape-request");
 
-
-
     self.get('store').queryRecord('merged-landscape', { timestamp1: timestamp1, timestamp2: timestamp2 }).then(success, failure).catch(error);
 
     function success(landscape) {
@@ -78,7 +76,6 @@ export default Service.extend(AlertifyHandler, Evented, {
     const urlPath = '/v1/extension/comparison/histories?timestamps=' + timestamps.join('&timestamps=');
     const url = `${ENV.APP.API_ROOT}${urlPath}`;
     let { access_token } = get(this.session, 'data.authenticated');
-    console.log(url);
 
     this.get('ajax').raw(url, {
       method: 'GET',
@@ -89,18 +86,16 @@ export default Service.extend(AlertifyHandler, Evented, {
     }).then((payload) => {
       const jsonHistory = payload.jqXHR.responseText;
       const parsedHistory = JSON.parse(jsonHistory);
-      console.log(parsedHistory);
       const storedHistory = self.get('store').push(parsedHistory);
 
       self.set('landscapeRepo.latestHistory', storedHistory);
-      console.log(storedHistory);
       self.debug("end import history request");
-    })/*.catch((e) => {
+    }).catch((e) => {
       self.set('landscapeRepo.latestHistory', undefined);
       self.showAlertifyMessage("History couldn't be requested!" +
         " Backend offline?");
       console.log("History couldn't be requested!", e);
-    });*/
+    });
   },
 
   uploadLandscape(evt) {

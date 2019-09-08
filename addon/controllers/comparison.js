@@ -9,14 +9,8 @@ export default VisualizationController.extend({
   loadService: service('load-merged-landscape'),
 
   actions: {
-    compareLandscapes() {
-      this.set('landscapeRepo.latestLandscape', this.get('otherRepo.latestLandscape'));
-      console.debug(this.get('landscapeRepo.latestLandscape'));
-      this.get('landscapeRepo').triggerLatestLandscapeUpdate();
-    },
-
     timelineClicked(timestamps) {
-      console.log(timestamps);
+      this.showAlertifyMessage('Loading merged landscape.');
       this.get('loadService').loadMergedLandscapeByTimestamps(timestamps[0], timestamps[timestamps.length - 1]);
       this.get('loadService').loadHistoryByTimestamps(timestamps);
     },
