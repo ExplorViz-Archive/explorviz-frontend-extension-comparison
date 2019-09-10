@@ -5,6 +5,7 @@ import { action, computed } from '@ember/object';
 
 import Component from 'explorviz-frontend/models/component';
 import Clazz from 'explorviz-frontend/models/clazz';
+import DrawableClazzCommunication from 'explorviz/models/drawableclazzcommunication';
 
 export default class History extends EmberComponent {
   layout = layout;
@@ -62,12 +63,11 @@ export default class History extends EmberComponent {
 
       console.log(histories);
       return histories;
-    }
 
-    if(highlightedEntity instanceof Clazz) {
+    } else if(highlightedEntity instanceof Clazz) {
+      let histories = [];
       let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory');
       let historyEntry = latestHistory[highlightedEntity.get('fullQualifiedName')];
-      let histories = [];
 
       if(historyEntry) {
         histories.push({name: highlightedEntity.get('name'), historyEntry: historyEntry});
@@ -80,13 +80,35 @@ export default class History extends EmberComponent {
 
   @computed('highlighter.highlightedEntity', 'landscapeRepo.latestHistory')
   get communicationHistory() {
-    console.log(this.get('landscapeRepo.latestHistory.communicationHistory'));
-    this.get('landscapeRepo.latestHistory.communicationHistory').then((latestHistory) => {
+    let latestHistory;
+    this.get('landscapeRepo.latestHistory.communicationHistory').then((lh) => {latestHistory = ls});
+    let highlightedEntity = this.get('highlighter.highlightedEntity');
+
+    if(highlightedEntity instanceof Clazz) {
+      let histories;
+
       latestHistory.forEach((historyEntry) => {
-        console.log([historyEntry.get('sourceClazz'), historyEntry.get('targetClazz')], historyEntry.get('history'));
+        if(historyEntry.get('sourceClazz') == highlightedEntity.get('fullQualifiedName')
+          || historyEntry.get('targetClazz') == highlightedEntity.get('fullQualifiedName')) {
+
+          const name = historyEntry.get('sourceClazz') + " -> " + historyEntry.get('targetClazz');
+          histories.push({name: name, historyEntry: historyEntry.get('history')});
+        }
       });
-    });
-    return true;
+
+    } else if(highlightedEntity instanceof DrawableClazzCommunication) {
+      let histories;
+
+      latestHistory.forEach((historyEntry) => {
+        if(historyEntry.get('sourceClazz') == highlightedEntity.get('sourceClazz.fullQualifiedName')
+          && historyEntry.get('targetClazz') == highlightedEntity.get('targetClazz.fullQualifiedName')) {
+
+            const name = highlightedEntity.get('sourceClazz.fullQualifiedName') + " -> " + highlightedEntity.get('targetClazz.fullQualifiedName');
+            histories.push({name: name, historyEntry: historyEntry.get('history')});
+          }
+      });
+    }
+  return null;
   }
 
   @action

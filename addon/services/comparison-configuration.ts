@@ -14,9 +14,12 @@ export default class ComparisonConfiguration extends Service {
       deletedComponentEven: "rgb(255, 255, 0)",
       addedClazz: "rgb(0, 0, 150)",
       deletedClazz: "rgb(224, 224, 0)",
+      addedCommunication: "rgb(0, 0, 255)",
+      deletedCommunication: "rgb(255, 255, 0)",
       deselectedClazz: "rgb(115, 133, 149)",
-      deselectedOdd: "rgb(112,128,144)",
-      deselectedEven: "rgb(119,136,153)"
+      deselectedCommunication: "rgb(119, 136, 153)",
+      deselectedOdd: "rgb(112, 128, 144)",
+      deselectedEven: "rgb(119, 136, 153)"
     });
 
     this.set('comparisonToggle', {

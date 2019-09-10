@@ -1,6 +1,6 @@
 import ApplicationRendering from 'explorviz-frontend/components/visualization/rendering/application-rendering';
 import layout from '../templates/components/merged-application-rendering';
-import {inject as service} from '@ember/service';
+import { inject as service } from '@ember/service';
 import applyCityLayout from
   'explorviz-frontend/utils/application-rendering/city-layouter';
 
@@ -66,23 +66,21 @@ export default ApplicationRendering.extend({
           opacityValue = this.get('currentUser').getPreferenceOrDefaultValue('rangesetting', 'appVizTransparencyIntensity');
         }
 
-        let communicationColor = this.get('configuration.applicationColors.communication');
+        let communicationColor;
         let communicationStatus;
 
         drawableClazzComm.get('aggregatedClazzCommunications').forEach((aggregatedClazzCommunication) => {
           communicationStatus = aggregatedClazzCommunication.get('extensionAttributes.status');
         });
 
-        //console.log(communicationStatus);
-
         if(communicationStatus == 'ADDED' && self.get('comparisonConfiguration.comparisonToggle.added')) {
-
+          communicationColor = this.get('comparisonConfiguration.mergedApplicationColors.addedCommunication');
         } else if(communicationStatus == 'DELETED' && self.get('comparisonConfiguration.comparisonToggle.deleted')) {
-
+          communicationColor = this.get('comparisonConfiguration.mergedApplicationColors.deletedCommunication');
         } else if(communicationStatus == 'ORIGINAL' && self.get('comparisonConfiguration.comparisonToggle.original')) {
-
+          communicationColor = this.get('configuration.applicationColors.communication')
         } else {
-
+          communicationColor = this.get('comparisonConfiguration.mergedApplicationColors.deselectedCommunication');
         }
 
         const communicationHighlightedColor = this.get('configuration.applicationColors.highlightedEntity');
