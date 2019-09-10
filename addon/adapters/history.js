@@ -13,13 +13,6 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
     });
   },
 
-  buildURL(modelName, id, snapshot, requestType, query) {
-    const timestamps = query['timestamps'];
-    const url = 'v1/extension/comparison/' + modelName + '/timestamps=' + timestamps.join('&timestamps=');
-    console.log(url);
-    return url;
-  },
-
   authorize(xhr) {
     let { access_token } = this.get('session.data.authenticated');
     xhr.setRequestHeader('Authorization', `Bearer ${access_token}`);

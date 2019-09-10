@@ -20,23 +20,23 @@ export default class History extends EmberComponent {
   landscapeRepo!: LandscapeRepo;
 
   @computed('highlighter.highlightedEntity', 'landscapeRepo.latestHistory')
-  get childHistory() {
+  get componentHistory() {
     let highlightedEntity = this.get('highlighter.highlightedEntity');
 
     if(highlightedEntity instanceof Component) {
-      let children = highlightedEntity.getAllComponents();
+      let components = highlightedEntity.getAllComponents();
+      components.push(highlightedEntity);
       let histories = [];
       let latestHistory = this.get('landscapeRepo.latestHistory.componentHistory');
 
-      children.forEach((child) => {
-        let historyEntry = latestHistory[child.get('fullQualifiedName')];
+      components.forEach((component) => {
+        let historyEntry = latestHistory[component.get('fullQualifiedName')];
 
         if(historyEntry) {
-          histories.push({name: child.get('name'), historyEntry: historyEntry});
+          histories.push({name: component.get('name'), historyEntry: historyEntry});
         }
       });
 
-      console.log(histories);
       return histories;
     }
 
@@ -48,22 +48,45 @@ export default class History extends EmberComponent {
     let highlightedEntity = this.get('highlighter.highlightedEntity');
 
     if(highlightedEntity instanceof Component) {
-      let children = highlightedEntity.getAllClazzes();
+      let clazzes = highlightedEntity.getAllClazzes();
       let histories = [];
       let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory');
 
-      children.forEach((child) => {
-        let historyEntry = latestHistory[child.get('fullQualifiedName')];
+      clazzes.forEach((clazz) => {
+        let historyEntry = latestHistory[clazz.get('fullQualifiedName')];
 
         if(historyEntry) {
-          histories.push({name: child.get('name'), history: historyEntry});
+          histories.push({name: clazz.get('name'), historyEntry: historyEntry});
         }
       });
 
       console.log(histories);
       return histories;
     }
+
+    if(highlightedEntity instanceof Clazz) {
+      let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory');
+      let historyEntry = latestHistory[highlightedEntity.get('fullQualifiedName')];
+      let histories = [];
+
+      if(historyEntry) {
+        histories.push({name: highlightedEntity.get('name'), historyEntry: historyEntry});
+      }
+
+      return histories;
+    }
     return null;
+  }
+
+  @computed('highlighter.highlightedEntity', 'landscapeRepo.latestHistory')
+  get communicationHistory() {
+    console.log(this.get('landscapeRepo.latestHistory.communicationHistory'));
+    this.get('landscapeRepo.latestHistory.communicationHistory').then((latestHistory) => {
+      latestHistory.forEach((historyEntry) => {
+        console.log([historyEntry.get('sourceClazz'), historyEntry.get('targetClazz')], historyEntry.get('history'));
+      });
+    });
+    return true;
   }
 
   @action

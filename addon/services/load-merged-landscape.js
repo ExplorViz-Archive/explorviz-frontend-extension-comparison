@@ -69,33 +69,33 @@ export default Service.extend(AlertifyHandler, Evented, {
 
     self.debug("Start import history");
 
-    console.log(timestamps);
+    console.log('Loading history for: ' + timestamps);
 
-    //self.get('store').queryRecord('history', { timestamps: timestamps}).then(success, failure).catch(error);
+    self.get('store').queryRecord('history', { timestamps: timestamps}).then(success, failure).catch(error);
 
-    const urlPath = '/v1/extension/comparison/histories?timestamps=' + timestamps.join('&timestamps=');
-    const url = `${ENV.APP.API_ROOT}${urlPath}`;
-    let { access_token } = get(this.session, 'data.authenticated');
+    function success(history) {
+      console.log(history);
 
-    this.get('ajax').raw(url, {
-      method: 'GET',
-      processData: false,
-      contentType: false,
-      headers: { 'Authorization': `Bearer ${access_token}` },
-      dataType: "text"
-    }).then((payload) => {
-      const jsonHistory = payload.jqXHR.responseText;
-      const parsedHistory = JSON.parse(jsonHistory);
-      const storedHistory = self.get('store').push(parsedHistory);
+      // Pause the visulization
+      self.get('modelUpdater').addDrawableCommunication();
 
-      self.set('landscapeRepo.latestHistory', storedHistory);
-      self.debug("end import history request");
-    }).catch((e) => {
+      self.set('landscapeRepo.latestHistory', history);
+      self.get('landscapeRepo').triggerLatestLandscapeUpdate();
+
+      self.debug("end import merged landscape-request");
+    }
+
+    function failure(e) {
       self.set('landscapeRepo.latestHistory', undefined);
       self.showAlertifyMessage("History couldn't be requested!" +
         " Backend offline?");
-      console.log("History couldn't be requested!", e);
-    });
+      self.debug("History couldn't be requested!", e);
+    }
+
+    function error(e) {
+      self.set('landscapeRepo.latestHistory', undefined);
+      self.debug("Error when fetching history: ", e);
+    }
   },
 
   uploadLandscape(evt) {
