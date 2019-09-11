@@ -4,6 +4,7 @@ const { attr } = DS;
 export default class CommunicationHistory extends DS.Model{
   @attr() sourceClazz!: string;
   @attr() targetClazz!: string;
+  @attr() application!: string;
   @attr() history!: any;
 }
 

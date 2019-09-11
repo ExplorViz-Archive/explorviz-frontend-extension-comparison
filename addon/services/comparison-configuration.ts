@@ -2,6 +2,7 @@ import Service from '@ember/service';
 
 export default class ComparisonConfiguration extends Service {
   mergedApplicationColors;
+  mergedLandscapeColors;
   comparisonToggle;
 
   init() {
@@ -20,6 +21,12 @@ export default class ComparisonConfiguration extends Service {
       deselectedCommunication: "rgb(119, 136, 153)",
       deselectedOdd: "rgb(112, 128, 144)",
       deselectedEven: "rgb(119, 136, 153)"
+    });
+
+    this.set('mergedLandscapeColors', {
+      addedApplication: "rgb(0, 0, 205)",
+      deletedApplication: "rgb(204, 204, 0)",
+      originalApplication: "rgb(22, 158, 43)"
     });
 
     this.set('comparisonToggle', {

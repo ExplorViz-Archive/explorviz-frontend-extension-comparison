@@ -12,7 +12,6 @@
       {{#if landscapeRepo.latestLandscape.systems}}
         {{visualization/page-setup/visualization-navbar
           content=(array
-            (component "history-overview")
             (component "visualization/page-setup/navbar/reset-visualization")
           )
         }}
@@ -26,7 +25,7 @@
       <div class="container-fluid">
         <div class="jumbotron">
           <h2>No Landscape Found!</h2>
-          <p>A new landscape will be fetched every 10 seconds.</p>
+          <p>Please upload at least two landscapes. Compare them by clicking their data points in the timeline.</p>
         </div>
         <div class="spinner-center-3" role="status"></div>
       </div>

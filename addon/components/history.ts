@@ -5,7 +5,7 @@ import { action, computed } from '@ember/object';
 
 import Component from 'explorviz-frontend/models/component';
 import Clazz from 'explorviz-frontend/models/clazz';
-import DrawableClazzCommunication from 'explorviz/models/drawableclazzcommunication';
+import DrawableClazzCommunication from 'explorviz-frontend/models/drawableclazzcommunication';
 
 export default class History extends EmberComponent {
   layout = layout;
@@ -22,13 +22,14 @@ export default class History extends EmberComponent {
 
   @computed('highlighter.highlightedEntity', 'landscapeRepo.latestHistory')
   get componentHistory() {
-    let highlightedEntity = this.get('highlighter.highlightedEntity');
+    const highlightedEntity = this.get('highlighter.highlightedEntity');
+    const applicationName = this.get('landscapeRepo.latestApplication.name');
 
     if(highlightedEntity instanceof Component) {
       let components = highlightedEntity.getAllComponents();
       components.push(highlightedEntity);
       let histories = [];
-      let latestHistory = this.get('landscapeRepo.latestHistory.componentHistory');
+      let latestHistory = this.get('landscapeRepo.latestHistory.componentHistory.' + applicationName);
 
       components.forEach((component) => {
         let historyEntry = latestHistory[component.get('fullQualifiedName')];
@@ -46,12 +47,13 @@ export default class History extends EmberComponent {
 
   @computed('highlighter.highlightedEntity', 'landscapeRepo.latestHistory')
   get clazzHistory() {
-    let highlightedEntity = this.get('highlighter.highlightedEntity');
+    const highlightedEntity = this.get('highlighter.highlightedEntity');
+    const applicationName = this.get('landscapeRepo.latestApplication.name');
 
     if(highlightedEntity instanceof Component) {
       let clazzes = highlightedEntity.getAllClazzes();
       let histories = [];
-      let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory');
+      let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory.' + applicationName);
 
       clazzes.forEach((clazz) => {
         let historyEntry = latestHistory[clazz.get('fullQualifiedName')];
@@ -66,7 +68,7 @@ export default class History extends EmberComponent {
 
     } else if(highlightedEntity instanceof Clazz) {
       let histories = [];
-      let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory');
+      let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory.' + applicationName);
       let historyEntry = latestHistory[highlightedEntity.get('fullQualifiedName')];
 
       if(historyEntry) {
@@ -80,33 +82,45 @@ export default class History extends EmberComponent {
 
   @computed('highlighter.highlightedEntity', 'landscapeRepo.latestHistory')
   get communicationHistory() {
-    let latestHistory;
-    this.get('landscapeRepo.latestHistory.communicationHistory').then((lh) => {latestHistory = ls});
-    let highlightedEntity = this.get('highlighter.highlightedEntity');
+    const latestHistory = this.get('landscapeRepo.latestHistory.communicationHistory');
+    const highlightedEntity = this.get('highlighter.highlightedEntity');
+    const applicationName = this.get('landscapeRepo.latestApplication.name');
 
     if(highlightedEntity instanceof Clazz) {
-      let histories;
+      let histories = [];
 
       latestHistory.forEach((historyEntry) => {
-        if(historyEntry.get('sourceClazz') == highlightedEntity.get('fullQualifiedName')
-          || historyEntry.get('targetClazz') == highlightedEntity.get('fullQualifiedName')) {
+        console.log([historyEntry.get('application'), applicationName]);
+        if((historyEntry.get('sourceClazz') == highlightedEntity.get('fullQualifiedName')
+          || historyEntry.get('targetClazz') == highlightedEntity.get('fullQualifiedName'))
+          && historyEntry.get('application') == applicationName) {
 
-          const name = historyEntry.get('sourceClazz') + " -> " + historyEntry.get('targetClazz');
+          const sourceName = historyEntry.get('sourceClazz');
+          const targetName = historyEntry.get('targetClazz');
+
+          const name = sourceName.substring(sourceName.lastIndexOf('.') + 1, sourceName.length - 1)
+            + " -> " + targetName.substring(targetName.lastIndexOf('.') + 1, targetName.length - 1);
           histories.push({name: name, historyEntry: historyEntry.get('history')});
         }
       });
 
+      return histories;
+
     } else if(highlightedEntity instanceof DrawableClazzCommunication) {
-      let histories;
+      let histories = [];
 
       latestHistory.forEach((historyEntry) => {
+        console.log([historyEntry.get('application'), applicationName]);
         if(historyEntry.get('sourceClazz') == highlightedEntity.get('sourceClazz.fullQualifiedName')
-          && historyEntry.get('targetClazz') == highlightedEntity.get('targetClazz.fullQualifiedName')) {
+          && historyEntry.get('targetClazz') == highlightedEntity.get('targetClazz.fullQualifiedName')
+          && historyEntry.get('application') == applicationName) {
 
-            const name = highlightedEntity.get('sourceClazz.fullQualifiedName') + " -> " + highlightedEntity.get('targetClazz.fullQualifiedName');
+            const name = highlightedEntity.get('sourceClazz.name') + " -> " + highlightedEntity.get('targetClazz.name');
             histories.push({name: name, historyEntry: historyEntry.get('history')});
           }
       });
+
+      return histories;
     }
   return null;
   }
