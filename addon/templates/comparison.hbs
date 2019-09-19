@@ -1,6 +1,6 @@
 <div class="mb-1">
     <div class="float-right">
-        <input id="selectBoxUploadLandscape" onchange={{action "uploadLandscape"}} type="file" style="display:none;" />
+        <input id="selectBoxUploadLandscape" onchange={{action "uploadLandscape"}} type="file" multiple style="display:none;" />
         {{#bs-button type="success" outline=true onClick=(action "triggerSelectBox") title="Upload a landscape"}}{{svg-jar "cloud-upload"}}
         <span>Upload landscape</span>{{/bs-button}}
     </div>

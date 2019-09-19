@@ -30,12 +30,13 @@ export default class History extends EmberComponent {
       components.push(highlightedEntity);
       let histories = [];
       let latestHistory = this.get('landscapeRepo.latestHistory.componentHistory.' + applicationName);
+      const self = this;
 
       components.forEach((component) => {
         let historyEntry = latestHistory[component.get('fullQualifiedName')];
 
         if(historyEntry) {
-          histories.push({name: component.get('name'), historyEntry: historyEntry});
+          histories.push({name: component.get('name'), historyEntry: self.convertHistoryEntry(historyEntry)});
         }
       });
 
@@ -54,12 +55,13 @@ export default class History extends EmberComponent {
       let clazzes = highlightedEntity.getAllClazzes();
       let histories = [];
       let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory.' + applicationName);
+      const self = this;
 
       clazzes.forEach((clazz) => {
         let historyEntry = latestHistory[clazz.get('fullQualifiedName')];
 
         if(historyEntry) {
-          histories.push({name: clazz.get('name'), historyEntry: historyEntry});
+          histories.push({name: clazz.get('name'), historyEntry: self.convertHistoryEntry(historyEntry)});
         }
       });
 
@@ -70,9 +72,10 @@ export default class History extends EmberComponent {
       let histories = [];
       let latestHistory = this.get('landscapeRepo.latestHistory.clazzHistory.' + applicationName);
       let historyEntry = latestHistory[highlightedEntity.get('fullQualifiedName')];
+      const self = this;
 
       if(historyEntry) {
-        histories.push({name: highlightedEntity.get('name'), historyEntry: historyEntry});
+        histories.push({name: highlightedEntity.get('name'), historyEntry: self.convertHistoryEntry(historyEntry)});
       }
 
       return histories;
@@ -88,6 +91,7 @@ export default class History extends EmberComponent {
 
     if(highlightedEntity instanceof Clazz) {
       let histories = [];
+      const self = this;
 
       latestHistory.forEach((historyEntry) => {
         console.log([historyEntry.get('application'), applicationName]);
@@ -100,7 +104,7 @@ export default class History extends EmberComponent {
 
           const name = sourceName.substring(sourceName.lastIndexOf('.') + 1, sourceName.length - 1)
             + " -> " + targetName.substring(targetName.lastIndexOf('.') + 1, targetName.length - 1);
-          histories.push({name: name, historyEntry: historyEntry.get('history')});
+          histories.push({name: name, historyEntry: self.convertHistoryEntry(historyEntry.get('history'))});
         }
       });
 
@@ -108,21 +112,32 @@ export default class History extends EmberComponent {
 
     } else if(highlightedEntity instanceof DrawableClazzCommunication) {
       let histories = [];
+      const self = this;
 
       latestHistory.forEach((historyEntry) => {
-        console.log([historyEntry.get('application'), applicationName]);
         if(historyEntry.get('sourceClazz') == highlightedEntity.get('sourceClazz.fullQualifiedName')
           && historyEntry.get('targetClazz') == highlightedEntity.get('targetClazz.fullQualifiedName')
           && historyEntry.get('application') == applicationName) {
 
             const name = highlightedEntity.get('sourceClazz.name') + " -> " + highlightedEntity.get('targetClazz.name');
-            histories.push({name: name, historyEntry: historyEntry.get('history')});
+            histories.push({name: name, historyEntry: self.convertHistoryEntry(historyEntry.get('history'))});
           }
       });
 
       return histories;
     }
   return null;
+  }
+
+  convertHistoryEntry(historyEntry) {
+    const convertedHistoryEntry = {};
+
+    Object.entries(historyEntry).forEach((entry) => {
+      const date = new Date(parseInt(entry[0]));
+      convertedHistoryEntry[date] = entry[1];
+    });
+    
+    return convertedHistoryEntry;
   }
 
   @action

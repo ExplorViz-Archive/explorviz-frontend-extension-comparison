@@ -74,8 +74,6 @@ export default Service.extend(AlertifyHandler, Evented, {
     self.get('store').queryRecord('history', { timestamps: timestamps}).then(success, failure).catch(error);
 
     function success(history) {
-      console.log(history);
-
       // Pause the visulization
       self.get('modelUpdater').addDrawableCommunication();
 
@@ -103,41 +101,44 @@ export default Service.extend(AlertifyHandler, Evented, {
 
     let { access_token } = get(this.session, 'data.authenticated');
 
-    const file = evt.target.files[0];
+    [...evt.target.files].forEach((file) => {
+      const fileName = file.name;
+      const urlPath = `/v1/landscapes/replay/upload?filename=${fileName}`;
+      const url = `${ENV.APP.API_ROOT}${urlPath}`;
 
-    const fileName = file.name;
-    const urlPath = `/v1/landscapes/replay/upload?filename=${fileName}`;
-    const url = `${ENV.APP.API_ROOT}${urlPath}`;
+      const fd = new FormData();
+      fd.append('file', file);
 
-    const fd = new FormData();
-    fd.append('file', file);
+      // use dataType: "text" since Ember-Ajax expects a JSON
+      // response by default and a simple HTTP 200 response would throw
+      // an error
+      this.get('ajax').raw(url, {
+        method: 'POST',
+        data: fd,
+        processData: false,
+        contentType: false,
+        headers: { 'Authorization': `Bearer ${access_token}` },
+        dataType: "text"
+      }).then((payload) => {
+        const jsonLandscape = payload.jqXHR.responseText;
+        const parsedLandscape = JSON.parse(jsonLandscape);
+        const storedLandscape = self.get('store').push(parsedLandscape);
 
-    // use dataType: "text" since Ember-Ajax expects a JSON
-    // response by default and a simple HTTP 200 response would throw
-    // an error
-    this.get('ajax').raw(url, {
-      method: 'POST',
-      data: fd,
-      processData: false,
-      contentType: false,
-      headers: { 'Authorization': `Bearer ${access_token}` },
-      dataType: "text"
-    }).then((payload) => {
-      const jsonLandscape = payload.jqXHR.responseText;
-      const parsedLandscape = JSON.parse(jsonLandscape);
-      const storedLandscape = self.get('store').push(parsedLandscape);
+        storedLandscape.get('timestamp').then((timestamp) => {
+          const timestampInMilli = timestamp.get('timestamp');
 
-      storedLandscape.get('timestamp').then((timestamp) => {
-        self.set('landscapeRepo.timestamps', [...this.landscapeRepo.timestamps, timestamp]);
+          if(!self.get('landscapeRepo.timestamps').includes(timestampInMilli)) {
+            self.set('landscapeRepo.timestamps', [...this.landscapeRepo.timestamps, timestampInMilli]);
+          }
+        });
+
+        self.showAlertifySuccess("Landscape sucessfully uploaded!");
+        this.debug("Landscape sucessfully uploaded!");
+      }).catch((error) => {
+        self.showAlertifyError(error.payload.errors[0].detail);
+        this.debug("Could not upload landscape.", error.payload.errors[0].detail);
+        throw new Error("Could not upload landscape. Enable debugging in console");
       });
-
-      self.showAlertifySuccess("Landscape sucessfully uploaded!");
-      this.debug("Landscape sucessfully uploaded!");
-    }).catch((error) => {
-      self.showAlertifyError(error.payload.errors[0].detail);
-      this.debug("Could not upload landscape.", error.payload.errors[0].detail);
-      throw new Error("Could not upload landscape. Enable debugging in console");
     });
   }
-
 });

@@ -11,7 +11,7 @@ export default class PlotlyTimeline extends Component.extend({
   layout = layout;
 
   // BEGIN user-set variables
-  timestamps : Timestamp[] = [];
+  timestamps : number[] = [];
 
   defaultMarkerColor = "#1f77b4";
   defaultMarkerSize = 8;
@@ -107,12 +107,7 @@ export default class PlotlyTimeline extends Component.extend({
         get(self, "_selectedTimestamps").push(clickedTimestamp.getTime());
 
         if(get(self, "_selectedTimestamps").length == get(self, "selectionCount")) {
-          let timestampsInMillis = [];
-
-          for(const timestamp of get(self, "timestamps")) {
-            timestampsInMillis.push(timestamp.get("timestamp"));
-          }
-
+          let timestampsInMillis = self.get('timestamps');
           let index0 = timestampsInMillis.indexOf(get(self, "_selectedTimestamps")[0]);
           let index1 = timestampsInMillis.indexOf(get(self, "_selectedTimestamps")[1]);
 
@@ -153,22 +148,24 @@ export default class PlotlyTimeline extends Component.extend({
 
   // BEGIN Plot Logic
 
-  setupPlotlyTimelineChart(timestamps : Timestamp[]) {
+  setupPlotlyTimelineChart(timestamps : number[]) {
 
     if(!timestamps || timestamps.length == 0) {
       return;
     }
 
+    timestamps.sort();
+
     const x : Date[] = [];
-    const y : number[] = [];
+    //const y : number[] = [];
 
     for(const timestamp of timestamps) {
-      x.push(new Date(timestamp.get('timestamp')));
-      y.push(timestamp.get('totalRequests'));
+      x.push(new Date(timestamp));
+      //y.push(200);
     }
 
-    const latestTimestamp : any = timestamps.lastObject;
-    const latestTimestampValue = new Date(get(latestTimestamp, 'timestamp'));
+    const latestTimestamp : any = timestamps[timestamps.length - 1];
+    const latestTimestampValue = new Date(latestTimestamp);
 
     const windowInterval = this.getSlidingWindowInterval(latestTimestampValue, get(this, "slidingWindowLowerBoundInMinutes"), get(this, "slidingWindowUpperBoundInMinutes"));
 
@@ -178,7 +175,7 @@ export default class PlotlyTimeline extends Component.extend({
 
     Plotly.newPlot(
       'plotlyDiv',
-      this.getPlotlyDataObject(x,y),
+      this.getPlotlyDataObject(x),
       layout,
       this.getPlotlyOptionsObject()
     );
@@ -188,22 +185,24 @@ export default class PlotlyTimeline extends Component.extend({
   };
 
 
-  extendPlotlyTimelineChart(timestamps : Timestamp[]) {
+  extendPlotlyTimelineChart(timestamps : number[]) {
 
     if(!timestamps || timestamps.length == 0) {
       return;
     }
 
+    timestamps.sort();
+
     const x : Date[] = [];
-    const y : number[] = [];
+    //const y : number[] = [];
 
     for(const timestamp of timestamps) {
-      x.push(new Date(get(timestamp, 'timestamp')));
-      y.push(get(timestamp, 'totalRequests'));
+      x.push(new Date(timestamp));
+      //y.push(200);
     }
 
-    const latestTimestamp : any = timestamps.lastObject;
-    const latestTimestampValue = new Date(get(latestTimestamp, 'timestamp'));
+    const latestTimestamp : any = timestamps[timestamps.length - 1];
+    const latestTimestampValue = new Date(latestTimestamp);
 
     const windowInterval = this.getSlidingWindowInterval(latestTimestampValue, get(this, "slidingWindowLowerBoundInMinutes"), get(this, "slidingWindowUpperBoundInMinutes"));
 
@@ -213,7 +212,7 @@ export default class PlotlyTimeline extends Component.extend({
 
     Plotly.react(
       'plotlyDiv',
-      this.getPlotlyDataObject(x,y),
+      this.getPlotlyDataObject(x),
       layout,
       this.getPlotlyOptionsObject()
     );
@@ -239,8 +238,8 @@ export default class PlotlyTimeline extends Component.extend({
     };
   };
 
-  hoverText(x : Date[] ,y : number[]) {
-    return x.map((xi, i) => `<b>Time</b>: ${xi}<br><b>Requests</b>: ${y[i]}<br>`);
+  hoverText(x : Date[]) {
+    return x.map((xi, i) => `<b>Time</b>: ${xi}<br>`);
   };
 
   getSlidingWindowInterval(t : Date, lowerBound : number, upperBound : number) : {"min" : number, "max" : number} {
@@ -255,7 +254,7 @@ export default class PlotlyTimeline extends Component.extend({
       dragmode: 'pan',
       hovermode: 'closest',
       hoverdistance: 10,
-      yaxis: {
+      /*yaxis: {
         fixedrange: true,
         title: {
           text: 'Requests',
@@ -264,7 +263,7 @@ export default class PlotlyTimeline extends Component.extend({
             color: '#7f7f7f'
           }
         }
-      },
+      },*/
       xaxis: {
         type: 'date',
         // range: [minRange,maxRange],
@@ -284,7 +283,7 @@ export default class PlotlyTimeline extends Component.extend({
     };
   };
 
-  getPlotlyDataObject(dates : Date[], requests : number[]) : [{}] {
+  getPlotlyDataObject(dates : Date[]) : [{}] {
 
     const colors = Array(dates.length).fill(get(this, "defaultMarkerColor"));
     const sizes = Array(dates.length).fill(get(this, "defaultMarkerSize"));
@@ -297,11 +296,11 @@ export default class PlotlyTimeline extends Component.extend({
         fill: 'tozeroy',
         marker: {color: colors, size: sizes},
         x: dates,
-        y: requests,
+        //y: requests,
         hoverlabel: {
           align: "left"
         },
-        text: this.hoverText(dates, requests)
+        text: this.hoverText(dates)
       }
     ];
   };
