@@ -1,38 +1,16 @@
-comparison-test
-==============================================================================
+ ExplorViz Frontend Comparison Extension
 
-[Short description of the addon.]
+This repository holds an extension for [ExplorViz Frontend](https://github.com/ExplorViz/explorviz-frontend) that enables software architecture comparison in ExplorViz.
 
+The related backend extension is [explorviz-backend-extension-comparison](https://github.com/ExplorViz/explorviz-backend-extension-comparison/tree/dte).
 
-Compatibility
-------------------------------------------------------------------------------
+## Requirements
+- [ExplorViz Frontend](https://github.com/ExplorViz/explorviz-frontend)
+- [ExplorViz Backend](https://github.com/ExplorViz/explorviz-backend)
+- [explorviz-backend-extension-comparison](https://github.com/ExplorViz/explorviz-backend-extension-comparison/tree/dte)
 
-* Ember.js v2.18 or above
-* Ember CLI v2.13 or above
-* Node.js v8 or above
-
-
-Installation
-------------------------------------------------------------------------------
-
-```
-ember install comparison-test
-```
-
-
-Usage
-------------------------------------------------------------------------------
-
-[Longer description of how to use the addon in apps.]
-
-
-Contributing
-------------------------------------------------------------------------------
-
-See the [Contributing](CONTRIBUTING.md) guide for details.
-
-
-License
-------------------------------------------------------------------------------
-
-This project is licensed under the [MIT License](LICENSE.md).
+## Setup Development / Usage
+1. Follow the installation instructions of [ExplorViz Frontend](https://github.com/ExplorViz/explorviz-frontend)
+2. Go to the `explorviz-frontend` directory
+3. Inside the `explorviz-frontend` directory install this extension with: `ember install https://github.com/ExplorViz/explorviz-frontend-extension-comparison#dte`
+4. For running the ExplorViz with the extension, please refer the instructions of [ExplorViz Frontend](https://github.com/ExplorViz/explorviz-frontend)

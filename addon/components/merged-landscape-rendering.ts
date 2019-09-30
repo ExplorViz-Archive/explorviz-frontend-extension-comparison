@@ -2,16 +2,22 @@ import LandscapeRendering from 'explorviz-frontend/components/visualization/rend
 import layout from '../templates/components/merged-landscape-rendering';
 import {inject as service} from '@ember/service'
 
-export default LandscapeRendering.extend({
-	layout,
-	landscapeRepo: service('merged-landscape-repository'),
-	comparisonConfiguration: service('comparison-configuration'),
+export default class MergedLandscapeRendering extends LandscapeRendering {
+	layout = layout;
+
+	@service('merged-landscape-repository')
+	landscapeRepo!: MergedLandscapeRepository;
+
+	@service('comparison-configuration')
+	comparisonConfiguration!: ComparisonConfiguration;
 
 	createPlane(model) {
     const emberModelName = model.constructor.modelName;
 		let color;
 		const applicationStatus = model.get('extensionAttributes.status');
 
+		// if an application is added check the status and set the color
+		// otherwise use the default behaviour of the landscape rendering
 		if(emberModelName == 'application') {
 			if(applicationStatus == 'ADDED') {
 				color = this.get('comparisonConfiguration.mergedLandscapeColors.addedApplication');
@@ -34,4 +40,4 @@ export default LandscapeRendering.extend({
     plane.userData['model'] = model;
     return plane;
   }
-});
+}

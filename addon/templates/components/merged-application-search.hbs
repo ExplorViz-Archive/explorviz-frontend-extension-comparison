@@ -1,0 +1,15 @@
+<li class="nav-item ml-2">
+    {{#power-select-multiple
+      triggerClass="bootstrap-theme-trigger form-control"
+      search=(perform searchEntity)
+      searchMessage="Insert name or start with '*'"
+      placeholder="Search Entity..."
+      onchange=(action "onSelect")
+      selected=selectedEntity
+      loadingMessage="loading..."
+      matchTriggerWidth=false
+      as |entity|
+    }}
+      {{entity.name}}
+    {{/power-select-multiple}}
+</li>

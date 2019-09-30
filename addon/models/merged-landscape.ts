@@ -7,7 +7,7 @@ import ApplicationCommunication from 'explorviz-frontend/models/applicationcommu
 const { belongsTo, hasMany } = DS;
 
 /**
-* Ember model for a landscape.
+* Ember model for a merged landscape.
 *
 * @class Landscape-Model
 * @extends BaseEntity-Model
@@ -32,7 +32,6 @@ export default class MergedLandscape extends BaseEntity {
 
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
 declare module 'ember-data/types/registries/model' {
   export default interface ModelRegistry {
     'merged-landscape': MergedLandscape;

@@ -69,10 +69,12 @@ export default ApplicationRendering.extend({
         let communicationColor;
         let communicationStatus;
 
+        // get the status of the communication
         drawableClazzComm.get('aggregatedClazzCommunications').forEach((aggregatedClazzCommunication) => {
           communicationStatus = aggregatedClazzCommunication.get('extensionAttributes.status');
         });
 
+        // check the communication status and the filter flags
         if(communicationStatus == 'ADDED' && self.get('comparisonConfiguration.comparisonToggle.added')) {
           communicationColor = this.get('comparisonConfiguration.mergedApplicationColors.addedCommunication');
         } else if(communicationStatus == 'DELETED' && self.get('comparisonConfiguration.comparisonToggle.deleted')) {
@@ -86,7 +88,7 @@ export default ApplicationRendering.extend({
         const communicationHighlightedColor = this.get('configuration.applicationColors.highlightedEntity');
 
         const material = new THREE.MeshBasicMaterial({
-          color: drawableClazzComm.get('highlighted') ? new THREE.Color(communicationHighlightedColor) : new THREE.Color(communicationColor), // either red if 'highlighted', otherwise orange
+          color: drawableClazzComm.get('highlighted') ? new THREE.Color(communicationHighlightedColor) : new THREE.Color(communicationColor),
           opacity: opacityValue,
           transparent: transparent
         });
@@ -165,6 +167,7 @@ export default ApplicationRendering.extend({
     const highlightedEntityColor = this.get('configuration.applicationColors.highlightedEntity');
     const statusAttribute = component.get('extensionAttributes.status');
 
+    // the component is even
     if(color == 'even') {
       if(statusAttribute == 'ADDED' && this.get('comparisonConfiguration.comparisonToggle.added')) {
         componentColor = this.get('comparisonConfiguration.mergedApplicationColors.addedComponentEven');
@@ -175,6 +178,7 @@ export default ApplicationRendering.extend({
       } else {
         componentColor = this.get('comparisonConfiguration.mergedApplicationColors.deselectedEven');
       }
+    // the component is odd
     } else if(color == 'odd') {
       if(statusAttribute == 'ADDED' && this.get('comparisonConfiguration.comparisonToggle.added')) {
         componentColor = this.get('comparisonConfiguration.mergedApplicationColors.addedComponentOdd');
@@ -204,6 +208,7 @@ export default ApplicationRendering.extend({
           const clazzAttribute = clazz.get('extensionAttributes.status');
           let clazzColor;
 
+          // check the clazz status attribute and the filter flags
           if(clazzAttribute == 'ADDED' && this.get('comparisonConfiguration.comparisonToggle.added')) {
             clazzColor = this.get('comparisonConfiguration.mergedApplicationColors.addedClazz');
           } else if (clazzAttribute == 'DELETED' && this.get('comparisonConfiguration.comparisonToggle.deleted')) {

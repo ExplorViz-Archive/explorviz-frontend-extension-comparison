@@ -3,7 +3,6 @@ import BaseRoute from 'explorviz-frontend/routes/base-route';
 export default BaseRoute.extend({
 	setupController(controller, model) {
 		this._super(controller, model);
-		//controller.initRendering();
 	},
 
 	actions: {

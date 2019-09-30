@@ -27,11 +27,6 @@ export default Service.extend(AlertifyHandler, Evented, {
     }
   },
 
-  /**
-   * Loads a landscape from the backend and triggers a visualization update
-   * @method loadLandscapeById
-   * @param {*} timestamp
-   */
   loadMergedLandscapeByTimestamps(timestamp1, timestamp2) {
     const self = this;
 
@@ -42,7 +37,6 @@ export default Service.extend(AlertifyHandler, Evented, {
     function success(landscape) {
       console.log("Importing landscapes: " + [timestamp1, timestamp2]);
 
-      // Pause the visulization
       self.get('modelUpdater').addDrawableCommunication();
 
       self.set('landscapeRepo.latestLandscape', landscape);
